@@ -1997,13 +1997,27 @@
         };
 
         // Delete confirmation custom flow
-        window.openDeleteConfirm = function(id) {
+        window.openDeleteConfirm = function(id, type = 'trade') {
             activeDeleteId = id;
+            activeDeleteType = type;
+            
+            const modalTitle = document.querySelector('#delete-modal h4');
+            const modalText = document.querySelector('#delete-modal p');
+            
+            if (type === 'mental') {
+                modalTitle.textContent = "Hapus Log Mental?";
+                modalText.textContent = "Tindakan ini tidak dapat dibatalkan. Log refleksi harian serta kondisi psikologi Anda akan dihapus secara permanen dari cloud.";
+            } else {
+                modalTitle.textContent = "Hapus Log Trading?";
+                modalText.textContent = "Tindakan ini tidak dapat dibatalkan. Riwayat data serta lampiran gambar di Cloud Storage akan dihapus secara permanen.";
+            }
+            
             document.getElementById('delete-modal').classList.remove('hidden');
         };
 
         window.closeDeleteModal = function() {
             activeDeleteId = null;
+            activeDeleteType = 'trade';
             document.getElementById('delete-modal').classList.add('hidden');
         };
 
@@ -2011,21 +2025,28 @@
             if (!activeDeleteId || !userId) return;
 
             try {
-                const target = rawTradesList.find(t => t.id === activeDeleteId);
-                
-                if (target && target.imageStoragePath) {
-                    const imgRef = ref(storage, target.imageStoragePath);
-                    await deleteObject(imgRef).catch(err => {
-                        console.warn("Berkas gambar di Cloud Storage tidak ditemukan atau gagal dibersihkan.", err);
-                    });
-                }
+                if (activeDeleteType === 'mental') {
+                    // Hapus dokumen log mental harian dari Firestore cloud
+                    const docRef = doc(db, 'artifacts', appId, 'users', userId, 'mental_logs', activeDeleteId);
+                    await deleteDoc(docRef);
+                    showToast("Log mental harian berhasil dihapus dari cloud.", "success");
+                } else {
+                    const target = rawTradesList.find(t => t.id === activeDeleteId);
+                    
+                    if (target && target.imageStoragePath) {
+                        const imgRef = ref(storage, target.imageStoragePath);
+                        await deleteObject(imgRef).catch(err => {
+                            console.warn("Berkas gambar di Cloud Storage tidak ditemukan atau gagal dibersihkan.", err);
+                        });
+                    }
 
-                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'trades', activeDeleteId);
-                await deleteDoc(docRef);
-                showToast("Log trade dan lampiran gambar berhasil dibersihkan dari cloud.", "success");
+                    const docRef = doc(db, 'artifacts', appId, 'users', userId, 'trades', activeDeleteId);
+                    await deleteDoc(docRef);
+                    showToast("Log trade dan lampiran gambar berhasil dibersihkan dari cloud.", "success");
+                }
             } catch (e) {
                 console.error("Error deleting firestore record:", e);
-                showToast("Gagal menghapus log transaksi.", "error");
+                showToast("Gagal menghapus log.", "error");
             } finally {
                 closeDeleteModal();
             }
