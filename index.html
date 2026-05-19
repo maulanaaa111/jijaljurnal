@@ -110,7 +110,7 @@
                 </button>
             </form>
 
-            <div class="flex items-center my-6">
+            <div class="flex flex-wrap items-center justify-end gap-2">
                 <div class="flex-1 border-t border-darkBorder"></div>
                 <span class="px-3 text-[10px] uppercase tracking-wider text-gray-500 font-semibold font-mono">atau</span>
                 <div class="flex-1 border-t border-darkBorder"></div>
@@ -141,8 +141,8 @@
                 
                 <div class="flex items-center space-x-4">
                     <!-- Tab Navigation Button -->
-                    <div class="flex bg-slate-800/40 p-1 rounded-xl border border-darkBorder/60 text-xs font-semibold">
-                        <button onclick="switchMainTab('dashboard')" id="nav-btn-dashboard" class="px-3.5 py-1.5 rounded-lg text-emerald-400 bg-darkCard border border-darkBorder/40 transition-all cursor-pointer">
+                    <div class="flex flex-wrap bg-slate-800/40 p-1 rounded-xl border border-darkBorder/60 text-xs font-semibold w-full sm:w-auto">
+                        <button onclick="switchMainTab('dashboard')" id="nav-btn-dashboard" class="flex-1 sm:flex-none ...">
                             <i class="fa-solid fa-gauge mr-1.5"></i>Log Transaksi
                         </button>
                         <button onclick="switchMainTab('mindset')" id="nav-btn-mindset" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer">
@@ -303,7 +303,7 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                    <table class="min-w-[1200px] w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-800/40 text-gray-400 text-[10px] uppercase font-semibold tracking-wider border-b border-darkBorder/40">
                                 <th class="py-3.5 px-5">Waktu / Tanggal</th>
