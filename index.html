@@ -334,7 +334,7 @@
                                     <th class="py-3.5 px-5">Harga (Entry ➔ TP | SL)</th>
                                     <th class="py-3.5 px-5">Ukuran</th>
                                     <th class="py-3.5 px-5 text-right">P&L ($)</th>
-                                    <th class="py-3.5 px-5 text-center">Psikologi</th>
+                                    <th class="py-3.5 px-5 text-center">Journey Emosi & Disiplin</th>
                                     <th class="py-3.5 px-5 text-center">Chart</th>
                                     <th class="py-3.5 px-5 text-center">Status</th>
                                     <th class="py-3.5 px-5 text-center">Aksi</th>
@@ -427,7 +427,7 @@
                                 <!-- Emotional Win Rate Breakdown -->
                                 <div class="bg-slate-800/40 border border-darkBorder/60 p-4 rounded-xl">
                                     <h4 class="text-xs font-semibold text-gray-300 mb-2 flex items-center justify-between">
-                                        <span>Win Rate Berdasarkan Emosi</span>
+                                        <span>Win Rate Berdasarkan Emosi Sebelum Entry</span>
                                         <i class="fa-solid fa-masks-theater text-indigo-400"></i>
                                     </h4>
                                     <div id="emotion-winrate-container" class="space-y-2.5 text-xs pt-1">
@@ -545,23 +545,54 @@
                     </div>
                 </div>
 
-                <!-- Trading Psychology & Discipline Fields -->
-                <div class="grid grid-cols-2 gap-3 bg-indigo-950/25 p-3.5 border border-indigo-900/40 rounded-xl">
-                    <!-- Pre-trade Emotion -->
-                    <div>
-                        <label class="block text-xs font-semibold text-indigo-300 mb-1" for="trade-emotion">Emosi Saat Entry</label>
-                        <select id="trade-emotion" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 cursor-pointer">
-                            <option value="CALM">🙂 Tenang / Objektif</option>
-                            <option value="FOMO">⚡ FOMO / Terburu-buru</option>
-                            <option value="GREED">🤑 Serakah (Overlot/Overtrade)</option>
-                            <option value="FEAR">😰 Takut Rugi / Ragu</option>
-                            <option value="REVENGE">😡 Dendam (Balas Dendam)</option>
-                            <option value="IMPATIENT">⏳ Tidak Sabar (Pucuk/Asal Masuk)</option>
-                        </select>
+                <!-- Trading Psychology & Discipline Fields (3-Phases) -->
+                <div class="bg-indigo-950/25 p-3.5 border border-indigo-900/40 rounded-xl space-y-3">
+                    <h4 class="text-xs font-bold text-indigo-300 border-b border-indigo-900/40 pb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>Psikologi & Refleksi 3 Fase</span>
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <!-- Sebelum Entry -->
+                        <div>
+                            <label class="block text-[10px] font-semibold text-indigo-300 mb-1" for="trade-emotion-before">Sebelum Entry</label>
+                            <select id="trade-emotion-before" class="w-full px-2 py-1.5 bg-slate-800 border border-darkBorder rounded-lg text-[11px] text-gray-100 focus:outline-none cursor-pointer">
+                                <option value="CALM">🙂 Tenang & Analitis</option>
+                                <option value="FOMO">⚡ FOMO (Takut Tertinggal)</option>
+                                <option value="IMPATIENT">⏳ Bosan / Tidak Sabar</option>
+                                <option value="GREED">🤑 Tamak / Serakah</option>
+                                <option value="FEAR">😰 Takut Rugi / Ragu</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Saat Entry (Holding) -->
+                        <div>
+                            <label class="block text-[10px] font-semibold text-indigo-300 mb-1" for="trade-emotion-during">Saat Hold Posisi</label>
+                            <select id="trade-emotion-during" class="w-full px-2 py-1.5 bg-slate-800 border border-darkBorder rounded-lg text-[11px] text-gray-100 focus:outline-none cursor-pointer">
+                                <option value="FOCUSED">🧘 Fokus & Tenang</option>
+                                <option value="ANXIOUS">📈 Cemas (Pantau Chart Terus)</option>
+                                <option value="HOPE">🤞 Berharap / Berdoa</option>
+                                <option value="PANIC">😱 Panik Harga Goyang</option>
+                                <option value="OVERCONFIDENT">😎 Terlalu Yakin / Sombong</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Sesudah Exit / Selesai -->
+                        <div>
+                            <label class="block text-[10px] font-semibold text-indigo-300 mb-1" for="trade-emotion-after">Setelah Selesai</label>
+                            <select id="trade-emotion-after" class="w-full px-2 py-1.5 bg-slate-800 border border-darkBorder rounded-lg text-[11px] text-gray-100 focus:outline-none cursor-pointer">
+                                <option value="SATISFIED">😌 Puas Patuhi Rule</option>
+                                <option value="RELIEVED">😮 Lega Selesai</option>
+                                <option value="REVENGE">😡 Dendam / Ingin Balas</option>
+                                <option value="REGRET">😔 Menyesal Keluar/Hold</option>
+                                <option value="DISAPPOINTED">😢 Kecewa Tapi Terima</option>
+                            </select>
+                        </div>
                     </div>
+
                     <!-- Discipline Star Rating -->
                     <div>
-                        <label class="block text-xs font-semibold text-indigo-300 mb-1" for="trade-discipline">Skor Disiplin (Plan)</label>
+                        <label class="block text-[10px] font-semibold text-indigo-300 mb-1" for="trade-discipline">Skor Disiplin (Kepatuhan Rencana)</label>
                         <select id="trade-discipline" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 cursor-pointer">
                             <option value="5">⭐⭐⭐⭐⭐ 5 (Sangat Disiplin)</option>
                             <option value="4">⭐⭐⭐⭐ 4 (Patuhi Aturan Utama)</option>
@@ -1105,13 +1136,13 @@
                 return;
             }
 
+            // Menganalisis Korelasi Berdasarkan Emosi SEBELUM Entry (Fase krusial penentu pemicu posisi)
             const emotionsMap = {
-                'CALM': { name: 'Tenang', emoji: '🙂', wins: 0, total: 0 },
-                'FOMO': { name: 'FOMO', emoji: '⚡', wins: 0, total: 0 },
-                'GREED': { name: 'Serakah', emoji: '🤑', wins: 0, total: 0 },
-                'FEAR': { name: 'Takut', emoji: '😰', wins: 0, total: 0 },
-                'REVENGE': { name: 'Balas Dendam', emoji: '😡', wins: 0, total: 0 },
-                'IMPATIENT': { name: 'Sabar', emoji: '⏳', wins: 0, total: 0 }
+                'CALM': { name: 'Tenang & Analitis', emoji: '🙂', wins: 0, total: 0 },
+                'FOMO': { name: 'FOMO (Tertinggal)', emoji: '⚡', wins: 0, total: 0 },
+                'IMPATIENT': { name: 'Tidak Sabar', emoji: '⏳', wins: 0, total: 0 },
+                'GREED': { name: 'Tamak / Serakah', emoji: '🤑', wins: 0, total: 0 },
+                'FEAR': { name: 'Takut / Ragu', emoji: '😰', wins: 0, total: 0 }
             };
 
             const disciplineMap = {
@@ -1123,11 +1154,11 @@
             };
 
             trades.forEach(t => {
-                const emo = t.emotion || 'CALM';
-                if (emotionsMap[emo]) {
-                    emotionsMap[emo].total++;
+                const emoBefore = t.emotionBefore || 'CALM';
+                if (emotionsMap[emoBefore]) {
+                    emotionsMap[emoBefore].total++;
                     if (t.status === 'WIN') {
-                        emotionsMap[emo].wins++;
+                        emotionsMap[emoBefore].wins++;
                     }
                 }
 
@@ -1138,7 +1169,7 @@
                 }
             });
 
-            // Render Win Rate per Emosi
+            // Render Win Rate per Emosi Sebelum Entry
             let emotionHtml = '';
             let hasEmotionData = false;
             Object.keys(emotionsMap).forEach(key => {
@@ -1357,19 +1388,20 @@
                     `;
                 }
 
-                // Mental / Psychology Column Renderer
-                const tradeEmotion = trade.emotion || 'CALM';
+                // Render Emojis Journey untuk 3 Fase
+                const emoBefore = trade.emotionBefore || 'CALM';
+                const emoDuring = trade.emotionDuring || 'FOCUSED';
+                const emoAfter = trade.emotionAfter || 'SATISFIED';
+                
+                const emojiMapBefore = { 'CALM': '🙂', 'FOMO': '⚡', 'IMPATIENT': '⏳', 'GREED': '🤑', 'FEAR': '😰' };
+                const emojiMapDuring = { 'FOCUSED': '🧘', 'ANXIOUS': '📈', 'HOPE': '🤞', 'PANIC': '😱', 'OVERCONFIDENT': '😎' };
+                const emojiMapAfter = { 'SATISFIED': '😌', 'RELIEVED': '😮', 'REVENGE': '😡', 'REGRET': '😔', 'DISAPPOINTED': '😢' };
+
+                const iconBefore = emojiMapBefore[emoBefore] || '🙂';
+                const iconDuring = emojiMapDuring[emoDuring] || '🧘';
+                const iconAfter = emojiMapAfter[emoAfter] || '😌';
+
                 const tradeDiscipline = trade.discipline || '5';
-                
-                const emotionsIconMap = {
-                    'CALM': '🙂 Tenang',
-                    'FOMO': '⚡ FOMO',
-                    'GREED': '🤑 Tamak',
-                    'FEAR': '😰 Takut',
-                    'REVENGE': '😡 Dendam',
-                    'IMPATIENT': '⏳ Sabar'
-                };
-                
                 let starRating = '';
                 for (let i = 1; i <= 5; i++) {
                     if (i <= parseInt(tradeDiscipline)) {
@@ -1381,14 +1413,15 @@
 
                 const mentalCell = `
                     <div class="flex flex-col items-center justify-center">
-                        <span class="text-[9px] font-semibold text-gray-400">${emotionsIconMap[tradeEmotion] || '🙂 Tenang'}</span>
-                        <div class="flex space-x-0.5 mt-0.5" title="Skor Disiplin: ${tradeDiscipline}/5">
+                        <span class="text-[11px] font-semibold tracking-wider text-gray-400 font-mono" title="Sebelum ➔ Saat Hold ➔ Selesai">
+                            ${iconBefore} <span class="text-[8px] text-gray-600">➔</span> ${iconDuring} <span class="text-[8px] text-gray-600">➔</span> ${iconAfter}
+                        </span>
+                        <div class="flex space-x-0.5 mt-1" title="Skor Disiplin: ${tradeDiscipline}/5">
                             ${starRating}
                         </div>
                     </div>
                 `;
 
-                // Display Entry Price alongside TP and SL in table
                 const entryStr = trade.entryPrice ? formatRawNum(trade.entryPrice) : '-';
                 const tpStr = trade.tpPrice ? `<span class="text-emerald-400 font-semibold">${formatRawNum(trade.tpPrice)}</span>` : '<span class="text-gray-600">-</span>';
                 const slStr = trade.slPrice ? `<span class="text-rose-400 font-semibold">${formatRawNum(trade.slPrice)}</span>` : '<span class="text-gray-600">-</span>';
@@ -1629,7 +1662,7 @@
             document.getElementById('lightbox-img').src = '';
         };
 
-        // NEW LOGIC: Form P&L calculator using Take Profit (TP) and Stop Loss (SL) targets
+        // Form P&L calculator using Take Profit (TP) and Stop Loss (SL) targets
         window.autoCalculatePnL = function() {
             const isManual = document.getElementById('manual-pnl-chk').checked;
             if (isManual) return; 
@@ -1713,7 +1746,11 @@
             const status = document.getElementById('trade-status').value;
             const pnl = parseFloat(document.getElementById('trade-pnl').value) || 0;
             const notes = document.getElementById('trade-notes').value.trim();
-            const emotion = document.getElementById('trade-emotion').value;
+            
+            // 3-Phase Emotions
+            const emotionBefore = document.getElementById('trade-emotion-before').value;
+            const emotionDuring = document.getElementById('trade-emotion-during').value;
+            const emotionAfter = document.getElementById('trade-emotion-after').value;
             const discipline = document.getElementById('trade-discipline').value;
 
             const existingTrade = tradeId ? rawTradesList.find(t => t.id === tradeId) : null;
@@ -1770,7 +1807,7 @@
 
             const tradeData = {
                 asset, type, entryPrice, tpPrice, slPrice, size, date, status, pnl, notes, imageUrl, imageStoragePath,
-                emotion, discipline,
+                emotionBefore, emotionDuring, emotionAfter, discipline,
                 lastUpdated: new Date().toISOString()
             };
 
@@ -1812,7 +1849,9 @@
             document.getElementById('trade-pnl').value = target.pnl || '';
             document.getElementById('trade-notes').value = target.notes || '';
             
-            document.getElementById('trade-emotion').value = target.emotion || 'CALM';
+            document.getElementById('trade-emotion-before').value = target.emotionBefore || 'CALM';
+            document.getElementById('trade-emotion-during').value = target.emotionDuring || 'FOCUSED';
+            document.getElementById('trade-emotion-after').value = target.emotionAfter || 'SATISFIED';
             document.getElementById('trade-discipline').value = target.discipline || '5';
 
             if (target.imageUrl) {
