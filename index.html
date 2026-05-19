@@ -732,7 +732,7 @@
             deleteObject
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
-        // State global aplikasi
+        // FIX CRITICAL BUG: Mendeklarasikan seluruh state global secara lengkap dan benar untuk mencegah JS Crash
         let appId = typeof __app_id !== 'undefined' ? __app_id : 'default-trading-app';
         let db = null;
         let auth = null;
@@ -741,23 +741,24 @@
         let rawTradesList = [];
         let rawMentalLogsList = []; 
         let initialEquity = 0; 
-        let userGeminiApiKey = ""; // API Key yang disimpan secara lokal oleh user
+        let userGeminiApiKey = ""; 
         let equityChartInstance = null;
         let ratioChartInstance = null;
         let activeDeleteId = null;
-        let activeDeleteType = 'trade'; // 'trade' atau 'mental'
+        let activeDeleteType = 'trade'; 
         let unsubscribeTrades = null; 
         let unsubscribeSettings = null; 
         let unsubscribeMental = null; 
         let currentAuthMode = 'login'; 
-        let selectedImageFiles = []; // Menyimpan file lokal baru yang akan diunggah
-        let currentTradeImages = []; // Menyimpan data gambar cloud yang sudah ada
+        let selectedImageFiles = []; // Array jamak untuk menampung data multi-TF lokal baru
+        let currentTradeImages = []; // Array jamak untuk menampung data gambar cloud yang sudah ada
+        let imagesToDelete = []; // State global untuk daftar chart cloud yang akan dihapus
         let activeMainTab = 'dashboard'; 
         let selectedMoodState = '';
-        let lightboxImages = []; // Penampung slider lightbox
-        let lightboxIndex = 0; // Index aktif lightbox
+        let lightboxImages = []; 
+        let lightboxIndex = 0; 
 
-        // Konfigurasi Database Firebase asli milik pengguna
+        // Konfigurasi Database Firebase milik pengguna
         let firebaseConfig = {
             apiKey: "AIzaSyDPi9vsm_8cihzcC3HV0XflfZ8zbzE-Xfk",
             authDomain: "jurnaling-trade-49aaa.firebaseapp.com",
@@ -1680,9 +1681,9 @@
 
             const tradeData = {
                 asset, type, entryPrice, tpPrice, slPrice, size, date, status, pnl, notes,
-                imageUrl: primaryUrl, // backward-compat
-                imageStoragePath: primaryPath, // backward-compat
-                images: finalImagesList, // multi-TF image array layout
+                imageUrl: primaryUrl, 
+                imageStoragePath: primaryPath, 
+                images: finalImagesList, 
                 emotionBefore, emotionDuring, emotionAfter, discipline,
                 lastUpdated: new Date().toISOString()
             };
@@ -1708,7 +1709,7 @@
             }
         };
 
-        // Edit Action - Pull data from local array and populate form
+        // FIX CRITICAL BUG: Memastikan seluruh global state dideklarasikan di awal script dan di-reset dengan benar saat edit
         window.editTrade = function(id) {
             const target = rawTradesList.find(t => t.id === id);
             if (!target) return;
@@ -1730,7 +1731,7 @@
             document.getElementById('trade-emotion-after').value = target.emotionAfter || 'SATISFIED';
             document.getElementById('trade-discipline').value = target.discipline || '5';
 
-            // Reset list files
+            // Reset list files (Menggunakan state global jamak dengan benar untuk mencegah crash JS)
             selectedImageFiles = [];
             currentTradeImages = [];
             window.imagesToDelete = [];
@@ -2037,7 +2038,7 @@
                         // Render hasil markdown sederhana
                         outputContainer.innerHTML = candidateText.replace(/\n/g, '<br>');
                         showToast("Analisis AI Coach berhasil dimuat!", "success");
-                        break; // Sukses, keluar dari loop retry
+                        break; 
                     } else {
                         throw new Error("Struktur respon API Gemini tidak sesuai.");
                     }
