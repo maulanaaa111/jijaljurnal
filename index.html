@@ -1,23 +1,1934 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width-device-width, initial-scale=1.0">
-        <title> Aku buat sendiri</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <h1>Halo Cantik Hehehe</h1>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Journal Pro - Firebase Edition</title>
+    <!-- Tailwind CSS for high quality design UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        darkBg: '#0b0f19',
+                        darkCard: '#151c2c',
+                        darkBorder: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        /* Hide scrollbars for neat look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #151c2c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
 
-        <p>
-            <a href="halaman.html"><button id="halaman.html"> Pencet Yang Ini</button></a>
-        </p>
-        
-        
+    <!-- Authentication Screen Container -->
+    <div id="auth-container" class="min-h-screen flex items-center justify-center p-4 bg-darkBg relative overflow-hidden">
+        <!-- Background Glowing Orbs -->
+        <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-82 h-82 bg-indigo-500/10 rounded-full blur-3xl"></div>
 
-        <footer> 
-            <p>&copy; 2025 My website. All Rights reserved.</p>
+        <!-- Auth Card -->
+        <div class="w-full max-w-md bg-darkCard/80 backdrop-blur-xl border border-darkBorder p-8 rounded-2xl shadow-2xl z-10">
+            <!-- Brand Logo Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex bg-gradient-to-tr from-emerald-500 to-teal-400 p-3 rounded-2xl shadow-lg shadow-emerald-500/20 mb-3">
+                    <i class="fa-solid fa-chart-line text-2xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">Welcome to TradeLog</h2>
+                <p class="text-xs text-gray-400 mt-1">Kelola portofolio trading & asah kondisi psikologimu</p>
+            </div>
+
+            <!-- Login / Register Switcher Tabs -->
+            <div class="flex bg-slate-800/60 p-1 rounded-xl mb-6 border border-darkBorder">
+                <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-semibold rounded-lg text-emerald-400 bg-darkCard/90 transition-all cursor-pointer">
+                    Masuk
+                </button>
+                <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer">
+                    Daftar Akun
+                </button>
+            </div>
+
+            <!-- Email & Password Form -->
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1" for="auth-email">Alamat Email</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                        <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full pl-9 pr-3 py-2.5 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-emerald-500 transition-colors">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1" for="auth-password">Kata Sandi</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                        <input type="password" id="auth-password" required placeholder="••••••••" class="w-full pl-9 pr-3 py-2.5 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-emerald-500 transition-colors">
+                    </div>
+                </div>
+
+                <button type="submit" id="auth-submit-btn" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 active:scale-98 transition-all text-gray-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/15 cursor-pointer flex items-center justify-center space-x-2">
+                    <span id="auth-btn-text">Masuk Sekarang</span>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="flex items-center my-6">
+                <div class="flex-1 border-t border-darkBorder"></div>
+                <span class="px-3 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">atau</span>
+                <div class="flex-1 border-t border-darkBorder"></div>
+            </div>
+
+            <!-- Anonymous Guest Login Trigger -->
+            <button onclick="handleAnonymousLogin()" id="auth-anon-btn" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700/80 active:scale-98 border border-darkBorder text-gray-300 font-semibold text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-user-secret text-xs text-gray-400"></i>
+                <span>Masuk sebagai Tamu (Anonim)</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Application Container (Hidden until authenticated) -->
+    <div id="app-container" class="hidden min-h-screen flex flex-col">
+        <!-- Navigation Bar -->
+        <nav class="border-b border-darkBorder bg-darkCard/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-emerald-500 to-teal-400 p-2.5 rounded-xl shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-chart-line text-lg text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">TradeLog</h1>
+                        <p class="text-[10px] text-gray-400">Jurnal Trading & Analisis Mental</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Tab Switcher Navigation -->
+                    <div class="hidden sm:flex bg-slate-800/60 p-1 rounded-xl border border-darkBorder mr-2">
+                        <button onclick="switchMainTab('dashboard')" id="tab-btn-dashboard" class="px-4 py-1.5 text-xs font-semibold rounded-lg text-emerald-400 bg-darkCard/90 transition-all cursor-pointer">
+                            <i class="fa-solid fa-chart-pie mr-1.5"></i>Dashboard
+                        </button>
+                        <button onclick="switchMainTab('psychology')" id="tab-btn-psychology" class="px-4 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer">
+                            <i class="fa-solid fa-brain mr-1.5"></i>Mindset & Emosi
+                        </button>
+                    </div>
+
+                    <!-- User ID Tag -->
+                    <div id="user-badge" class="hidden md:flex items-center space-x-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-darkBorder">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="user-id-display" class="text-xs text-gray-300 font-mono truncate max-w-[150px]">Loading User...</span>
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <button onclick="openTradeModal()" class="flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-600 active:scale-95 transition-all text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md shadow-emerald-500/10 cursor-pointer">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span class="hidden sm:inline">Catat Trade</span>
+                    </button>
+
+                    <!-- Logout Button -->
+                    <button onclick="handleLogout()" title="Keluar dari Akun" class="flex items-center justify-center text-gray-400 hover:text-rose-400 bg-slate-800/40 hover:bg-slate-800 border border-darkBorder/60 p-2.5 rounded-xl transition-all cursor-pointer">
+                        <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Tab Switcher Navigation -->
+        <div class="sm:hidden flex bg-darkCard border-b border-darkBorder p-1.5">
+            <button onclick="switchMainTab('dashboard')" id="mobile-tab-btn-dashboard" class="flex-1 py-2 text-xs font-semibold rounded-lg text-emerald-400 bg-slate-800 text-center">
+                Dashboard
+            </button>
+            <button onclick="switchMainTab('psychology')" id="mobile-tab-btn-psychology" class="flex-1 py-2 text-xs font-semibold rounded-lg text-gray-400 text-center">
+                Mental & Mindset
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+            
+            <!-- Tab 1: Dashboard Trading Content -->
+            <div id="tab-dashboard-view" class="space-y-6">
+                <!-- Statistics Section Dashboard -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Net Profit/Loss Card -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder flex flex-col justify-between shadow-xl transition-all duration-300 hover:border-gray-700">
+                        <div class="flex items-center justify-between text-gray-400 mb-2">
+                            <span class="text-xs font-medium tracking-wider uppercase">Saldo & Net PnL</span>
+                            <button onclick="openEquityModal()" class="text-xs text-indigo-400 hover:text-indigo-300 transition-colors flex items-center space-x-1 cursor-pointer" title="Atur Modal Awal">
+                                <i class="fa-solid fa-gear"></i>
+                                <span>Set Modal</span>
+                            </button>
+                        </div>
+                        <div class="mt-1">
+                            <span id="stat-net-pnl" class="text-xl md:text-2xl font-bold text-gray-100">$0.00</span>
+                            <p id="stat-pnl-percentage" class="text-xs text-gray-500 mt-1">0% growth</p>
+                            <p id="stat-current-balance" class="text-[10px] text-gray-400 mt-1 italic">Saldo: $0.00 (Modal: $0.00)</p>
+                        </div>
+                    </div>
+
+                    <!-- Win Rate Card -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder flex flex-col justify-between shadow-xl transition-all duration-300 hover:border-gray-700">
+                        <div class="flex items-center justify-between text-gray-400 mb-2">
+                            <span class="text-xs font-medium tracking-wider uppercase">Win Rate</span>
+                            <i class="fa-solid fa-bullseye text-sm text-emerald-400"></i>
+                        </div>
+                        <div class="mt-1">
+                            <span id="stat-win-rate" class="text-xl md:text-2xl font-bold text-gray-100">0%</span>
+                            <!-- Bar win rate -->
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                                <div id="stat-win-rate-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Trades Card -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder flex flex-col justify-between shadow-xl transition-all duration-300 hover:border-gray-700">
+                        <div class="flex items-center justify-between text-gray-400 mb-2">
+                            <span class="text-xs font-medium tracking-wider uppercase">Total Trades</span>
+                            <i class="fa-solid fa-scale-balanced text-sm text-amber-400"></i>
+                        </div>
+                        <div class="mt-1">
+                            <span id="stat-total-trades" class="text-xl md:text-2xl font-bold text-gray-100">0</span>
+                            <p class="text-xs text-gray-500 mt-1">
+                                <span id="stat-wins" class="text-emerald-400 font-bold">0 W</span> • 
+                                <span id="stat-losses" class="text-rose-400 font-bold">0 L</span> •
+                                <span id="stat-be" class="text-gray-400 font-bold">0 BE</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Disiplin Rate Card -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder flex flex-col justify-between shadow-xl transition-all duration-300 hover:border-gray-700">
+                        <div class="flex items-center justify-between text-gray-400 mb-2">
+                            <span class="text-xs font-medium tracking-wider uppercase">Disiplin Rate</span>
+                            <i class="fa-solid fa-brain text-sm text-indigo-400"></i>
+                        </div>
+                        <div class="mt-1">
+                            <span id="stat-avg-discipline" class="text-xl md:text-2xl font-bold text-gray-100">0.0 / 5</span>
+                            <p id="stat-discipline-sub" class="text-[10px] text-gray-500 mt-1 truncate">Kepatuhan Trading Plan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualizations and Filters Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Equity Chart Card -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder lg:col-span-2 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold text-gray-200 flex items-center space-x-2">
+                                <i class="fa-solid fa-chart-area text-indigo-400"></i>
+                                <span>Kurva Ekuitas (Kumulatif P&L)</span>
+                            </h3>
+                            <span class="text-xs text-gray-500">Semua Waktu</span>
+                        </div>
+                        <div class="relative flex-1 min-h-[220px] max-h-[300px]">
+                            <canvas id="equityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Win/Loss Ratio & Quick Stats Card -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-200 mb-4 flex items-center space-x-2">
+                                <i class="fa-solid fa-chart-pie text-emerald-400"></i>
+                                <span>Rasio Win / Loss</span>
+                            </h3>
+                            <div class="relative w-full aspect-square max-h-[160px] mx-auto mb-4">
+                                <canvas id="ratioChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="border-t border-darkBorder/60 pt-3 space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-400">Trade Terbesar (Win):</span>
+                                <span id="stat-max-win" class="text-emerald-400 font-bold">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-400">Trade Terbesar (Loss):</span>
+                                <span id="stat-max-loss" class="text-rose-400 font-bold">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters & Trade Logs -->
+                <div class="bg-darkCard rounded-2xl border border-darkBorder shadow-xl overflow-hidden">
+                    <!-- Filter Header -->
+                    <div class="p-5 border-b border-darkBorder/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-100">Riwayat Transaksi</h3>
+                            <p class="text-xs text-gray-500 mt-0.5">Filter dan kelola seluruh posisi trading Anda</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Search Input -->
+                            <div class="relative min-w-[160px] max-w-xs flex-1">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                                <input type="text" id="filter-search" placeholder="Cari Pair/Aset..." oninput="applyFilters()" class="w-full pl-8 pr-3 py-1.5 bg-slate-800 border border-darkBorder/80 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                            </div>
+                            
+                            <!-- Filter Status -->
+                            <select id="filter-status" onchange="applyFilters()" class="px-3 py-1.5 bg-slate-800 border border-darkBorder/80 rounded-xl text-xs text-gray-300 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+                                <option value="ALL">Semua Status</option>
+                                <option value="WIN">Win</option>
+                                <option value="LOSS">Loss</option>
+                                <option value="BE">Breakeven</option>
+                                <option value="OPEN">Open Position</option>
+                            </select>
+
+                            <!-- Filter Type -->
+                            <select id="filter-type" onchange="applyFilters()" class="px-3 py-1.5 bg-slate-800 border border-darkBorder/80 rounded-xl text-xs text-gray-300 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+                                <option value="ALL">Semua Tipe</option>
+                                <option value="LONG">Long (Buy)</option>
+                                <option value="SHORT">Short (Sell)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Trade Logs Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800/40 text-gray-400 text-[10px] uppercase font-semibold tracking-wider border-b border-darkBorder/40">
+                                    <th class="py-3.5 px-5">Waktu / Tanggal</th>
+                                    <th class="py-3.5 px-5">Aset</th>
+                                    <th class="py-3.5 px-5">Arah</th>
+                                    <th class="py-3.5 px-5">Harga (Entry ➔ TP | SL)</th>
+                                    <th class="py-3.5 px-5">Ukuran</th>
+                                    <th class="py-3.5 px-5 text-right">P&L ($)</th>
+                                    <th class="py-3.5 px-5 text-center">Psikologi</th>
+                                    <th class="py-3.5 px-5 text-center">Chart</th>
+                                    <th class="py-3.5 px-5 text-center">Status</th>
+                                    <th class="py-3.5 px-5 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trade-table-body" class="divide-y divide-darkBorder/40 text-xs text-gray-300">
+                                <tr id="empty-state-row">
+                                    <td colspan="10" class="text-center py-12 text-gray-500">
+                                        <i class="fa-regular fa-folder-open text-3xl mb-3 block text-gray-600"></i>
+                                        Belum ada riwayat transaksi. Klik <span class="text-emerald-500 cursor-pointer font-semibold" onclick="openTradeModal()">Catat Trade</span> untuk memulai.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Psychology & Mindset Content -->
+            <div id="tab-psychology-view" class="hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Daily Mental Check-in Form -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center space-x-2">
+                                <i class="fa-solid fa-heart-pulse text-emerald-400"></i>
+                                <span>Check-in Mental Harian</span>
+                            </h3>
+                            <p class="text-xs text-gray-400 mb-4">Catat kondisi mental Anda sebelum atau sesudah sesi trading hari ini.</p>
+                            
+                            <form id="mental-checkin-form" onsubmit="saveMentalCheckin(event)" class="space-y-4">
+                                <!-- Date -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 mb-1" for="mental-date">Tanggal Log</label>
+                                    <input type="date" id="mental-date" required class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500">
+                                </div>
+                                
+                                <!-- Mood Picker -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 mb-2">Mood / Kondisi Emosi Hari Ini</label>
+                                    <div class="flex justify-between bg-slate-800/60 p-2 rounded-xl border border-darkBorder">
+                                        <button type="button" onclick="selectMood('ANGRY', this)" class="mood-btn p-2 rounded-lg text-lg grayscale hover:grayscale-0 active:scale-95 transition-all cursor-pointer" title="Marah / Dendam">😡</button>
+                                        <button type="button" onclick="selectMood('STRESSED', this)" class="mood-btn p-2 rounded-lg text-lg grayscale hover:grayscale-0 active:scale-95 transition-all cursor-pointer" title="Cemas / Stres">😰</button>
+                                        <button type="button" onclick="selectMood('NEUTRAL', this)" class="mood-btn p-2 rounded-lg text-lg grayscale hover:grayscale-0 active:scale-95 transition-all cursor-pointer" title="Biasa Saja">😐</button>
+                                        <button type="button" onclick="selectMood('CALM', this)" class="mood-btn p-2 rounded-lg text-lg grayscale hover:grayscale-0 active:scale-95 transition-all cursor-pointer" title="Tenang / Fokus">🙂</button>
+                                        <button type="button" onclick="selectMood('CONFIDENT', this)" class="mood-btn p-2 rounded-lg text-lg grayscale hover:grayscale-0 active:scale-95 transition-all cursor-pointer" title="Sangat Percaya Diri">😎</button>
+                                    </div>
+                                    <input type="hidden" id="mental-selected-mood" required>
+                                </div>
+
+                                <!-- Sleep Hours & Stress level -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="mental-sleep">Durasi Tidur (Jam)</label>
+                                        <input type="number" step="0.5" id="mental-sleep" placeholder="8" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="mental-stress">Tingkat Fokus (1-5)</label>
+                                        <select id="mental-stress" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                                            <option value="5">5 - Sangat Fokus</option>
+                                            <option value="4">4 - Cukup Fokus</option>
+                                            <option value="3">3 - Biasa Saja</option>
+                                            <option value="2">2 - Agak Terganggu</option>
+                                            <option value="1">1 - Tidak Fokus / Lelah</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Self-Notes -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 mb-1" for="mental-notes">Refleksi Diri & Pelajaran Mental Hari Ini</label>
+                                    <textarea id="mental-notes" rows="3" placeholder="Bagaimana emosi Anda hari ini? Apakah mematuhi trading plan? Adakah godaan FOMO?" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 resize-none"></textarea>
+                                </div>
+
+                                <button type="submit" id="mental-submit-btn" class="w-full py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-lg transition-all cursor-pointer">
+                                    Simpan Log Mental
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Psychology Analytics -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder lg:col-span-2 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center space-x-2">
+                                <i class="fa-solid fa-chart-line text-indigo-400"></i>
+                                <span>Korelasi Mental vs Kinerja Trading</span>
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <!-- Emotional Win Rate Breakdown -->
+                                <div class="bg-slate-800/40 border border-darkBorder/60 p-4 rounded-xl">
+                                    <h4 class="text-xs font-semibold text-gray-300 mb-2 flex items-center justify-between">
+                                        <span>Win Rate Berdasarkan Emosi</span>
+                                        <i class="fa-solid fa-masks-theater text-indigo-400"></i>
+                                    </h4>
+                                    <div id="emotion-winrate-container" class="space-y-2.5 text-xs pt-1">
+                                        <p class="text-gray-500 text-center italic py-4">Belum ada data emosi trade.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Discipline vs P&L analysis -->
+                                <div class="bg-slate-800/40 border border-darkBorder/60 p-4 rounded-xl">
+                                    <h4 class="text-xs font-semibold text-gray-300 mb-2 flex items-center justify-between">
+                                        <span>Rerata P&L Berdasarkan Disiplin</span>
+                                        <i class="fa-solid fa-graduation-cap text-emerald-400"></i>
+                                    </h4>
+                                    <div id="discipline-pnl-container" class="space-y-2.5 text-xs pt-1">
+                                        <p class="text-gray-500 text-center italic py-4">Belum ada data disiplin trade.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Mood Log History -->
+                        <div class="border-t border-darkBorder/60 pt-4">
+                            <h4 class="text-xs font-bold text-gray-300 mb-3">Riwayat Log Psikologi</h4>
+                            <div class="overflow-y-auto max-h-[150px] space-y-2" id="mental-logs-history">
+                                <p class="text-[11px] text-gray-500 text-center italic py-2">Belum ada check-in harian.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="mt-auto border-t border-darkBorder/80 bg-darkCard/50 py-4 px-4 text-center">
+            <p class="text-xs text-gray-500">&copy; 2026 Trading Journal Pro. Didukung dengan Cloud Firestore & Cloud Storage.</p>
         </footer>
+    </div>
 
-    </body>
+    <!-- Add/Edit Trade Modal Overlay -->
+    <div id="trade-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-darkCard border border-darkBorder w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl transition-all scale-95 duration-200 flex flex-col max-h-[90vh]">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-darkBorder/60 flex justify-between items-center">
+                <h3 id="modal-title" class="text-base font-bold text-gray-100 flex items-center space-x-2">
+                    <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+                    <span>Catat Trade Baru</span>
+                </h3>
+                <button onclick="closeTradeModal()" class="text-gray-400 hover:text-white transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <form id="trade-form" onsubmit="saveTrade(event)" class="p-5 space-y-4 overflow-y-auto flex-1">
+                <input type="hidden" id="trade-id">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Asset -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-asset">Aset / Pair *</label>
+                        <input type="text" id="trade-asset" required placeholder="Contoh: BTCUSDT, EURUSD" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <!-- Type -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-type">Arah Posisi *</label>
+                        <select id="trade-type" required onchange="autoCalculatePnL()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+                            <option value="LONG">LONG (Buy)</option>
+                            <option value="SHORT">SHORT (Sell)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Entry Price -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-entry">Harga Entry *</label>
+                        <input type="number" step="any" id="trade-entry" required placeholder="0.00" oninput="autoCalculatePnL()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <!-- Position Size -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-size">Ukuran (Size / Lot) *</label>
+                        <input type="number" step="any" id="trade-size" required placeholder="Contoh: 0.1, 10" oninput="autoCalculatePnL()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 bg-slate-800/30 p-3 rounded-xl border border-darkBorder/40">
+                    <!-- Take Profit -->
+                    <div>
+                        <label class="block text-xs font-semibold text-emerald-400 mb-1" for="trade-tp">Target Take Profit (TP)</label>
+                        <input type="number" step="any" id="trade-tp" placeholder="0.00" oninput="autoCalculatePnL()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-emerald-100 focus:outline-none focus:border-emerald-500 transition-colors">
+                    </div>
+                    <!-- Stop Loss -->
+                    <div>
+                        <label class="block text-xs font-semibold text-rose-400 mb-1" for="trade-sl">Target Stop Loss (SL)</label>
+                        <input type="number" step="any" id="trade-sl" placeholder="0.00" oninput="autoCalculatePnL()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-rose-100 focus:outline-none focus:border-rose-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Trade Date -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-date">Tanggal Trade *</label>
+                        <input type="datetime-local" id="trade-date" required class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <!-- Status Override -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-status">Status Transaksi</label>
+                        <select id="trade-status" onchange="togglePnLField()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+                            <option value="OPEN">Open Position (Belum Exit)</option>
+                            <option value="WIN">WIN</option>
+                            <option value="LOSS">LOSS</option>
+                            <option value="BE">Breakeven</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Trading Psychology & Discipline Fields -->
+                <div class="grid grid-cols-2 gap-3 bg-indigo-950/25 p-3.5 border border-indigo-900/40 rounded-xl">
+                    <!-- Pre-trade Emotion -->
+                    <div>
+                        <label class="block text-xs font-semibold text-indigo-300 mb-1" for="trade-emotion">Emosi Saat Entry</label>
+                        <select id="trade-emotion" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                            <option value="CALM">🙂 Tenang / Objektif</option>
+                            <option value="FOMO">⚡ FOMO / Terburu-buru</option>
+                            <option value="GREED">🤑 Serakah (Overlot/Overtrade)</option>
+                            <option value="FEAR">😰 Takut Rugi / Ragu</option>
+                            <option value="REVENGE">😡 Dendam (Balas Dendam)</option>
+                            <option value="IMPATIENT">⏳ Tidak Sabar (Pucuk/Asal Masuk)</option>
+                        </select>
+                    </div>
+                    <!-- Discipline Star Rating -->
+                    <div>
+                        <label class="block text-xs font-semibold text-indigo-300 mb-1" for="trade-discipline">Skor Disiplin (Plan)</label>
+                        <select id="trade-discipline" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                            <option value="5">⭐⭐⭐⭐⭐ 5 (Sangat Disiplin)</option>
+                            <option value="4">⭐⭐⭐⭐ 4 (Patuhi Aturan Utama)</option>
+                            <option value="3">⭐⭐⭐ 3 (Agak Menyimpang)</option>
+                            <option value="2">⭐⭐ 2 (Melanggar Rule)</option>
+                            <option value="1">⭐ 1 (Asal Tebak / Gambling)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Image Attachment Section -->
+                <div class="bg-slate-800/20 p-3.5 border border-darkBorder rounded-xl">
+                    <label class="block text-xs font-semibold text-gray-400 mb-2">Screenshot Chart / Setup (Opsional)</label>
+                    <div class="relative flex items-center justify-center border-2 border-dashed border-darkBorder hover:border-indigo-500 rounded-xl p-4 bg-slate-800/40 cursor-pointer transition-colors group">
+                        <input type="file" id="trade-image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)">
+                        <div class="text-center group-hover:text-indigo-400 transition-colors pointer-events-none" id="image-upload-placeholder">
+                            <i class="fa-regular fa-image text-2xl mb-1 text-gray-500 group-hover:text-indigo-400 transition-colors"></i>
+                            <p class="text-[10px] text-gray-400 group-hover:text-indigo-300">Klik atau seret file gambar di sini</p>
+                            <p class="text-[9px] text-gray-500 mt-0.5">PNG, JPG, WEBP maks 5MB</p>
+                        </div>
+                        <div id="image-preview-container" class="hidden relative w-full h-32 rounded-lg overflow-hidden">
+                            <img id="image-preview" src="" alt="Preview Chart" class="w-full h-full object-cover">
+                            <button type="button" onclick="removeSelectedImage(event)" class="absolute top-2 right-2 bg-rose-500 hover:bg-rose-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg transition-colors cursor-pointer z-10">
+                                <i class="fa-solid fa-xmark text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Real-time upload progress bar -->
+                    <div id="upload-progress-container" class="hidden mt-2">
+                        <div class="flex justify-between text-[9px] text-gray-400 mb-1">
+                            <span>Mengupload ke cloud...</span>
+                            <span id="upload-percentage">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                            <div id="upload-progress-bar" class="bg-indigo-500 h-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- P&L Calculation Options -->
+                <div class="bg-slate-800/40 p-3.5 rounded-xl border border-darkBorder/60 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-semibold text-gray-300 flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" id="manual-pnl-chk" onchange="togglePnLField()" class="rounded bg-slate-800 border-darkBorder text-emerald-500 focus:ring-0 cursor-pointer">
+                            <span>Atur P&L Manual</span>
+                        </label>
+                        <span id="calc-hint" class="text-[10px] text-gray-500 italic">Kalkulasi Otomatis Aktif</span>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-400 mb-1" for="trade-pnl">Profit / Loss (USD) *</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">$</span>
+                            <input type="number" step="any" id="trade-pnl" required placeholder="0.00" class="w-full pl-7 pr-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes / Trading setup & Strategy -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1" for="trade-notes">Catatan & Rencana Setup</label>
+                    <textarea id="trade-notes" rows="2" placeholder="Tuliskan catatan setup, emosi, atau alasan trading..." class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                </div>
+
+                <!-- Submit and Cancel buttons -->
+                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-darkBorder/40">
+                    <button type="button" onclick="closeTradeModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-gray-300 rounded-xl text-xs font-semibold transition-colors cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="submit" id="submit-btn" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 active:scale-95 transition-all text-white rounded-xl text-xs font-semibold cursor-pointer">
+                        Simpan Trade
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal for Fullscale Image Viewer -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
+        <button onclick="closeLightbox()" class="absolute top-5 right-5 text-gray-400 hover:text-white transition-colors cursor-pointer text-2xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-4xl max-h-[85vh] overflow-hidden rounded-xl border border-darkBorder/60 shadow-2xl" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt="High Resolution Chart" class="max-w-full max-h-[80vh] object-contain">
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- Custom Dialog Delete Modal -->
+    <div id="delete-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-darkCard border border-darkBorder w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl p-5">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                </div>
+                <h4 class="text-base font-bold text-gray-100">Hapus Log Trading?</h4>
+                <p class="text-xs text-gray-400 mt-2">Tindakan ini tidak dapat dibatalkan. Riwayat data serta lampiran gambar di Cloud Storage akan dihapus secara permanen.</p>
+            </div>
+            <div class="flex items-center justify-center space-x-2 mt-5">
+                <button onclick="closeDeleteModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-gray-300 rounded-xl text-xs font-semibold transition-colors cursor-pointer">
+                    Batal
+                </button>
+                <button id="confirm-delete-btn" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer">
+                    Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Atur Modal Awal -->
+    <div id="equity-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-darkCard border border-darkBorder w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl p-5">
+            <div class="text-center mb-4">
+                <div class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-vault text-xl"></i>
+                </div>
+                <h4 class="text-base font-bold text-gray-100">Atur Modal Awal</h4>
+                <p class="text-xs text-gray-400 mt-1">Modal awal digunakan sebagai acuan perhitungan persentase pertumbuhan dan saldo akun Anda.</p>
+            </div>
+            <form id="equity-form" onsubmit="saveInitialEquity(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1" for="initial-equity-input">Jumlah Modal Awal (USD) *</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">$</span>
+                        <input type="number" step="any" id="initial-equity-input" required placeholder="1000.00" class="w-full pl-7 pr-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeEquityModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-gray-300 rounded-xl text-xs font-semibold transition-colors cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="submit" id="save-equity-btn" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase JS SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            addDoc, 
+            deleteDoc, 
+            onSnapshot, 
+            collection 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import {
+            getStorage,
+            ref,
+            uploadBytesResumable,
+            getDownloadURL,
+            deleteObject
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        // Global state
+        let appId = typeof __app_id !== 'undefined' ? __app_id : 'default-trading-app';
+        let db = null;
+        let auth = null;
+        let storage = null;
+        let userId = null;
+        let rawTradesList = [];
+        let rawMentalLogsList = []; // State untuk log harian psikologi
+        let initialEquity = 0; // State modal awal trading
+        let equityChartInstance = null;
+        let ratioChartInstance = null;
+        let activeDeleteId = null;
+        let unsubscribeTrades = null; 
+        let unsubscribeSettings = null; 
+        let unsubscribeMental = null; 
+        let currentAuthMode = 'login'; 
+        let selectedImageFile = null;
+        let activeMainTab = 'dashboard'; 
+        let selectedMoodState = '';
+
+        // Firebase Configuration (Proyek Anda)
+        let firebaseConfig = {
+            apiKey: "AIzaSyDPi9vsm_8cihzcC3HV0XflfZ8zbzE-Xfk",
+            authDomain: "jurnaling-trade-49aaa.firebaseapp.com",
+            projectId: "jurnaling-trade-49aaa",
+            storageBucket: "jurnaling-trade-49aaa.firebasestorage.app",
+            messagingSenderId: "32928827191",
+            appId: "1:32928827191:web:8cf18b049228fdddcefcb2",
+            measurementId: "G-308BLJX2QV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        storage = getStorage(app);
+
+        window.onload = function() {
+            // Monitor Auth state changes
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userId = user.uid;
+                    
+                    // Show app screen, hide auth screen
+                    document.getElementById('auth-container').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+
+                    // Set user display badge
+                    const userDisplay = user.isAnonymous ? "Tamu Anonim" : user.email;
+                    document.getElementById('user-id-display').textContent = userDisplay;
+                    document.getElementById('user-badge').classList.remove('hidden');
+                    
+                    showToast(`Selamat datang kembali, ${userDisplay}!`, "success");
+                    
+                    // Set default date for mental check-in
+                    document.getElementById('mental-date').value = new Date().toISOString().split('T')[0];
+                    
+                    // Load real-time settings, logs, and mental history
+                    listenToSettings();
+                    listenToTrades();
+                    listenToMentalLogs();
+                } else {
+                    // Show auth screen, hide app screen
+                    userId = null;
+                    document.getElementById('auth-container').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('hidden');
+                    document.getElementById('user-badge').classList.add('hidden');
+
+                    if (unsubscribeTrades) { unsubscribeTrades(); unsubscribeTrades = null; }
+                    if (unsubscribeSettings) { unsubscribeSettings(); unsubscribeSettings = null; }
+                    if (unsubscribeMental) { unsubscribeMental(); unsubscribeMental = null; }
+                }
+            });
+        };
+
+        // Switch Main Tabs (Dashboard vs Psychology)
+        window.switchMainTab = function(tabName) {
+            activeMainTab = tabName;
+            
+            const tabBtnDash = document.getElementById('tab-btn-dashboard');
+            const tabBtnPsych = document.getElementById('tab-btn-psychology');
+            const mobTabBtnDash = document.getElementById('mobile-tab-btn-dashboard');
+            const mobTabBtnPsych = document.getElementById('mobile-tab-btn-psychology');
+
+            const viewDash = document.getElementById('tab-dashboard-view');
+            const viewPsych = document.getElementById('tab-psychology-view');
+
+            if (tabName === 'dashboard') {
+                viewDash.classList.remove('hidden');
+                viewPsych.classList.add('hidden');
+                
+                if (tabBtnDash) tabBtnDash.className = "px-4 py-1.5 text-xs font-semibold rounded-lg text-emerald-400 bg-darkCard/90 transition-all cursor-pointer";
+                if (tabBtnPsych) tabBtnPsych.className = "px-4 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer";
+                
+                if (mobTabBtnDash) mobTabBtnDash.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-emerald-400 bg-slate-800 text-center";
+                if (mobTabBtnPsych) mobTabBtnPsych.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-gray-400 text-center";
+            } else {
+                viewDash.classList.add('hidden');
+                viewPsych.classList.remove('hidden');
+                
+                if (tabBtnDash) tabBtnDash.className = "px-4 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer";
+                if (tabBtnPsych) tabBtnPsych.className = "px-4 py-1.5 text-xs font-semibold rounded-lg text-emerald-400 bg-darkCard/90 transition-all cursor-pointer";
+                
+                if (mobTabBtnDash) mobTabBtnDash.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-gray-400 text-center";
+                if (mobTabBtnPsych) mobTabBtnPsych.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-emerald-400 bg-slate-800 text-center";
+            }
+        };
+
+        // Real-time listener untuk mental logs (Daily Mindset Check-in)
+        function listenToMentalLogs() {
+            if (!userId) return;
+            const colRef = collection(db, 'artifacts', appId, 'users', userId, 'mental_logs');
+            
+            unsubscribeMental = onSnapshot(colRef, (snapshot) => {
+                const logs = [];
+                snapshot.forEach((doc) => {
+                    logs.push({ id: doc.id, ...doc.data() });
+                });
+                
+                logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+                rawMentalLogsList = logs;
+                
+                renderMentalLogsHistory();
+            }, (error) => {
+                console.error("Error reading Firestore mental logs:", error);
+            });
+        }
+
+        // Real-time listener untuk pengaturan Modal Awal
+        function listenToSettings() {
+            if (!userId) return;
+            const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'balance');
+            
+            unsubscribeSettings = onSnapshot(settingsDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    initialEquity = parseFloat(docSnap.data().initialEquity) || 0;
+                } else {
+                    initialEquity = 0; 
+                }
+                applyFilters();
+            }, (error) => {
+                console.error("Error reading settings Firestore:", error);
+            });
+        }
+
+        // Switch between Login and Register views
+        window.switchAuthTab = function(mode) {
+            currentAuthMode = mode;
+            const btnText = document.getElementById('auth-btn-text');
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+
+            if (mode === 'login') {
+                btnText.textContent = "Masuk Sekarang";
+                tabLogin.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-emerald-400 bg-darkCard/90 transition-all cursor-pointer";
+                tabRegister.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer";
+            } else {
+                btnText.textContent = "Daftar Akun Baru";
+                tabLogin.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer";
+                tabRegister.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-emerald-400 bg-darkCard/90 transition-all cursor-pointer";
+            }
+        };
+
+        // Handle Submit for Email/Password Authentication
+        window.handleAuthSubmit = async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+            const submitBtn = document.getElementById('auth-submit-btn');
+
+            if (!email || !password) {
+                showToast("Harap isi email dan kata sandi dengan lengkap.", "error");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Memproses...`;
+
+            try {
+                if (currentAuthMode === 'login') {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showToast("Akun Anda berhasil didaftarkan!", "success");
+                }
+            } catch (error) {
+                console.error("Auth Error:", error);
+                let msg = "Terjadi kesalahan sistem otentikasi.";
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    msg = "Email atau sandi yang Anda masukkan salah.";
+                } else if (error.code === 'auth/email-already-in-use') {
+                    msg = "Email tersebut sudah terdaftar di sistem kami.";
+                } else if (error.code === 'auth/weak-password') {
+                    msg = "Kata sandi minimal harus terdiri dari 6 karakter.";
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = "Format penulisan email tidak valid.";
+                }
+                showToast(msg, "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>${currentAuthMode === 'login' ? 'Masuk Sekarang' : 'Daftar Akun Baru'}</span>`;
+            }
+        };
+
+        // Handle Anonymous Login Method
+        window.handleAnonymousLogin = async function() {
+            const anonBtn = document.getElementById('auth-anon-btn');
+            anonBtn.disabled = true;
+            anonBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Menghubungkan...`;
+
+            try {
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.error("Anonymous Sign-In Error:", error);
+                showToast("Metode Anonymous belum aktif di Firebase Console Anda.", "error");
+            } finally {
+                anonBtn.disabled = false;
+                anonBtn.innerHTML = `
+                    <i class="fa-solid fa-user-secret text-xs text-gray-400"></i>
+                    <span>Masuk sebagai Tamu (Anonim)</span>
+                `;
+            }
+        };
+
+        // Handle Logout Action
+        window.handleLogout = async function() {
+            try {
+                await signOut(auth);
+                showToast("Anda telah keluar dari akun.", "info");
+            } catch (error) {
+                console.error("Logout Error:", error);
+                showToast("Gagal keluar dari sesi.", "error");
+            }
+        };
+
+        // Real-time listener using Firebase Firestore
+        function listenToTrades() {
+            if (!userId) return;
+
+            const tradesCollection = collection(db, 'artifacts', appId, 'users', userId, 'trades');
+            
+            unsubscribeTrades = onSnapshot(tradesCollection, (snapshot) => {
+                const trades = [];
+                snapshot.forEach((doc) => {
+                    trades.push({ id: doc.id, ...doc.data() });
+                });
+
+                rawTradesList = trades;
+                applyFilters();
+                
+            }, (error) => {
+                console.error("Error reading Firestore snapshot data:", error);
+                showToast("Gagal menyinkronkan data real-time database.", "error");
+            });
+        }
+
+        // Filter & Sort process locally in JS Memory
+        window.applyFilters = function() {
+            const searchValue = document.getElementById('filter-search').value.toLowerCase().trim();
+            const statusValue = document.getElementById('filter-status').value;
+            const typeValue = document.getElementById('filter-type').value;
+
+            let filtered = rawTradesList.filter(trade => {
+                const matchSearch = trade.asset && trade.asset.toLowerCase().includes(searchValue);
+                const matchStatus = statusValue === 'ALL' || trade.status === statusValue;
+                const matchType = typeValue === 'ALL' || trade.type === typeValue;
+                
+                return matchSearch && matchStatus && matchType;
+            });
+
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            calculateDashboardStats(filtered);
+            renderTable(filtered);
+            renderCharts(filtered);
+            calculatePsychologyAnalytics(filtered);
+        };
+
+        // Mathematics Dashboard Statistic Engine
+        function calculateDashboardStats(trades) {
+            let totalTrades = trades.length;
+            let wins = 0;
+            let losses = 0;
+            let breakeven = 0;
+            let totalPnL = 0;
+            let grossWin = 0;
+            let grossLoss = 0;
+            let maxWin = 0;
+            let maxLoss = 0;
+            let totalDiscipline = 0;
+            let tradesWithDiscipline = 0;
+
+            trades.forEach(trade => {
+                const pnl = parseFloat(trade.pnl) || 0;
+                totalPnL += pnl;
+
+                if (trade.discipline) {
+                    totalDiscipline += parseInt(trade.discipline);
+                    tradesWithDiscipline++;
+                }
+
+                if (trade.status === 'WIN') {
+                    wins++;
+                    grossWin += pnl;
+                    if (pnl > maxWin) maxWin = pnl;
+                } else if (trade.status === 'LOSS') {
+                    losses++;
+                    grossLoss += Math.abs(pnl);
+                    if (pnl < maxLoss) maxLoss = pnl;
+                } else if (trade.status === 'BE') {
+                    breakeven++;
+                } else if (trade.status === 'OPEN') {
+                    if (pnl > 0) {
+                        grossWin += pnl;
+                    } else if (pnl < 0) {
+                        grossLoss += Math.abs(pnl);
+                    }
+                }
+            });
+
+            const winnableTrades = wins + losses;
+            const winRate = winnableTrades > 0 ? Math.round((wins / winnableTrades) * 100) : 0;
+            const avgDiscipline = tradesWithDiscipline > 0 ? (totalDiscipline / tradesWithDiscipline).toFixed(1) : "0.0";
+
+            const pnlEl = document.getElementById('stat-net-pnl');
+            pnlEl.textContent = (totalPnL >= 0 ? '+' : '') + formatCurrency(totalPnL);
+            if (totalPnL >= 0) {
+                pnlEl.className = "text-xl md:text-2xl font-bold text-emerald-400";
+            } else {
+                pnlEl.className = "text-xl md:text-2xl font-bold text-rose-400";
+            }
+
+            const growthPercentage = initialEquity > 0 ? ((totalPnL / initialEquity) * 100).toFixed(2) : "0.00";
+            document.getElementById('stat-pnl-percentage').textContent = `${growthPercentage}% growth`;
+            
+            const currentBalance = initialEquity + totalPnL;
+            document.getElementById('stat-current-balance').textContent = `Saldo: ${formatCurrency(currentBalance)} (Modal: ${formatCurrency(initialEquity)})`;
+
+            document.getElementById('stat-win-rate').textContent = `${winRate}%`;
+            document.getElementById('stat-win-rate-bar').style.width = `${winRate}%`;
+            document.getElementById('stat-total-trades').textContent = totalTrades;
+            document.getElementById('stat-wins').textContent = `${wins} W`;
+            document.getElementById('stat-losses').textContent = `${losses} L`;
+            document.getElementById('stat-be').textContent = `${breakeven} BE`;
+            
+            document.getElementById('stat-avg-discipline').textContent = `${avgDiscipline} / 5`;
+            const discSub = document.getElementById('stat-discipline-sub');
+            if (parseFloat(avgDiscipline) >= 4.0) {
+                discSub.className = "text-[10px] text-emerald-400 font-bold mt-1";
+                discSub.textContent = "Sangat Patuh Trading Plan";
+            } else if (parseFloat(avgDiscipline) >= 3.0) {
+                discSub.className = "text-[10px] text-amber-400 font-semibold mt-1";
+                discSub.textContent = "Disiplin Cukup Baik";
+            } else if (parseFloat(avgDiscipline) > 0) {
+                discSub.className = "text-[10px] text-rose-400 font-bold mt-1";
+                discSub.textContent = "Sering Emosional/Gagal Plan";
+            } else {
+                discSub.className = "text-[10px] text-gray-500 mt-1";
+                discSub.textContent = "Belum Ada Data Disiplin";
+            }
+
+            document.getElementById('stat-max-win').textContent = formatCurrency(maxWin);
+            document.getElementById('stat-max-loss').textContent = formatCurrency(maxLoss);
+        }
+
+        // Mental Analytics Generator
+        function calculatePsychologyAnalytics(trades) {
+            const emotionContainer = document.getElementById('emotion-winrate-container');
+            const disciplineContainer = document.getElementById('discipline-pnl-container');
+
+            if (trades.length === 0) {
+                emotionContainer.innerHTML = `<p class="text-gray-500 text-center italic py-4">Belum ada data emosi trade.</p>`;
+                disciplineContainer.innerHTML = `<p class="text-gray-500 text-center italic py-4">Belum ada data disiplin trade.</p>`;
+                return;
+            }
+
+            const emotionsMap = {
+                'CALM': { name: 'Tenang', emoji: '🙂', wins: 0, total: 0 },
+                'FOMO': { name: 'FOMO', emoji: '⚡', wins: 0, total: 0 },
+                'GREED': { name: 'Serakah', emoji: '🤑', wins: 0, total: 0 },
+                'FEAR': { name: 'Takut', emoji: '😰', wins: 0, total: 0 },
+                'REVENGE': { name: 'Balas Dendam', emoji: '😡', wins: 0, total: 0 },
+                'IMPATIENT': { name: 'Sabar', emoji: '⏳', wins: 0, total: 0 }
+            };
+
+            const disciplineMap = {
+                '5': { name: '5 (Sangat Disiplin)', sumPnL: 0, total: 0 },
+                '4': { name: '4 (Cukup Disiplin)', sumPnL: 0, total: 0 },
+                '3': { name: '3 (Agak Melenceng)', sumPnL: 0, total: 0 },
+                '2': { name: '2 (Melanggar Rule)', sumPnL: 0, total: 0 },
+                '1': { name: '1 (Asal Menebak)', sumPnL: 0, total: 0 }
+            };
+
+            trades.forEach(t => {
+                const emo = t.emotion || 'CALM';
+                if (emotionsMap[emo]) {
+                    emotionsMap[emo].total++;
+                    if (t.status === 'WIN') {
+                        emotionsMap[emo].wins++;
+                    }
+                }
+
+                const disc = t.discipline || '5';
+                if (disciplineMap[disc]) {
+                    disciplineMap[disc].total++;
+                    disciplineMap[disc].sumPnL += parseFloat(t.pnl) || 0;
+                }
+            });
+
+            // Render Win Rate per Emosi
+            let emotionHtml = '';
+            let hasEmotionData = false;
+            Object.keys(emotionsMap).forEach(key => {
+                const item = emotionsMap[key];
+                if (item.total > 0) {
+                    hasEmotionData = true;
+                    const wr = Math.round((item.wins / item.total) * 100);
+                    let barColor = "bg-rose-500";
+                    if (wr >= 60) barColor = "bg-emerald-500";
+                    else if (wr >= 40) barColor = "bg-amber-500";
+
+                    emotionHtml += `
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[11px] text-gray-300">
+                                <span>${item.emoji} <strong>${item.name}</strong> (${item.total} Trades)</span>
+                                <span class="font-bold">${wr}% Win</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="${barColor} h-full" style="width: ${wr}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            emotionContainer.innerHTML = hasEmotionData ? emotionHtml : `<p class="text-gray-500 text-center italic py-4">Belum ada data emosi trade.</p>`;
+
+            // Render Rerata P&L per Disiplin
+            let disciplineHtml = '';
+            let hasDisciplineData = false;
+            Object.keys(disciplineMap).forEach(key => {
+                const item = disciplineMap[key];
+                if (item.total > 0) {
+                    hasDisciplineData = true;
+                    const avgPnL = item.sumPnL / item.total;
+                    let pnlColor = "text-gray-400";
+                    if (avgPnL > 0) pnlColor = "text-emerald-400 font-bold";
+                    else if (avgPnL < 0) pnlColor = "text-rose-400 font-bold";
+
+                    disciplineHtml += `
+                        <div class="flex justify-between items-center py-1.5 border-b border-darkBorder/40">
+                            <span class="text-[11px] text-gray-300">Skor ${item.name} (${item.total}x)</span>
+                            <span class="${pnlColor}">${avgPnL >= 0 ? '+' : ''}$${avgPnL.toFixed(2)} / trade</span>
+                        </div>
+                    `;
+                }
+            });
+            disciplineContainer.innerHTML = hasDisciplineData ? disciplineHtml : `<p class="text-gray-500 text-center italic py-4">Belum ada data disiplin trade.</p>`;
+        }
+
+        // Data Visualizations Renderer
+        function renderCharts(trades) {
+            const chronoTrades = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            let runningSum = initialEquity;
+            const datesLabels = [];
+            const equityPoints = [initialEquity];
+
+            datesLabels.push("Start");
+            
+            chronoTrades.forEach(trade => {
+                runningSum += parseFloat(trade.pnl) || 0;
+                datesLabels.push(new Date(trade.date).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' }));
+                equityPoints.push(runningSum);
+            });
+
+            if (equityChartInstance) {
+                equityChartInstance.destroy();
+            }
+
+            const ctxEquity = document.getElementById('equityChart').getContext('2d');
+            
+            const chartGradient = ctxEquity.createLinearGradient(0, 0, 0, 300);
+            chartGradient.addColorStop(0, runningSum >= initialEquity ? 'rgba(16, 185, 129, 0.25)' : 'rgba(244, 63, 94, 0.25)');
+            chartGradient.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
+
+            equityChartInstance = new Chart(ctxEquity, {
+                type: 'line',
+                data: {
+                    labels: datesLabels,
+                    datasets: [{
+                        label: 'Saldo Akun ($)',
+                        data: equityPoints,
+                        borderColor: runningSum >= initialEquity ? '#10b981' : '#f43f5e',
+                        borderWidth: 2,
+                        backgroundColor: chartGradient,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: chronoTrades.length > 30 ? 0 : 3,
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `Saldo: $${context.raw.toFixed(2)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 9 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(30, 41, 59, 0.4)' },
+                            ticks: { color: '#64748b', font: { size: 9 } }
+                        }
+                    }
+                }
+            });
+
+            // Ratio Chart
+            let winCount = 0;
+            let lossCount = 0;
+            let beCount = 0;
+            let openCount = 0;
+
+            trades.forEach(t => {
+                if (t.status === 'WIN') winCount++;
+                else if (t.status === 'LOSS') lossCount++;
+                else if (t.status === 'BE') beCount++;
+                else if (t.status === 'OPEN') openCount++;
+            });
+
+            if (ratioChartInstance) {
+                ratioChartInstance.destroy();
+            }
+
+            const ctxRatio = document.getElementById('ratioChart').getContext('2d');
+            ratioChartInstance = new Chart(ctxRatio, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Win', 'Loss', 'Breakeven', 'Open'],
+                    datasets: [{
+                        data: [winCount, lossCount, beCount, openCount],
+                        backgroundColor: ['#10b981', '#f43f5e', '#64748b', '#6366f1'],
+                        borderWidth: 2,
+                        borderColor: '#151c2c'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                color: '#94a3b8',
+                                font: { size: 9 },
+                                padding: 12
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render dynamic table logic
+        function renderTable(trades) {
+            const tableBody = document.getElementById('trade-table-body');
+            tableBody.innerHTML = '';
+
+            if (trades.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="10" class="text-center py-12 text-gray-500">
+                            <i class="fa-regular fa-folder-open text-3xl mb-3 block text-gray-600"></i>
+                            Tidak ditemukan data trade yang cocok dengan filter pencarian.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            trades.forEach(trade => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-darkBorder/30 hover:bg-slate-800/20 transition-all duration-150";
+
+                const pnlValue = parseFloat(trade.pnl) || 0;
+                let pnlClass = "text-gray-400 text-right";
+                let badgeClass = "bg-slate-800 text-gray-400";
+                let statusLabel = trade.status;
+
+                if (trade.status === 'WIN') {
+                    pnlClass = "text-emerald-400 text-right font-bold";
+                    badgeClass = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                    statusLabel = "WIN";
+                } else if (trade.status === 'LOSS') {
+                    pnlClass = "text-rose-400 text-right font-bold";
+                    badgeClass = "bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                    statusLabel = "LOSS";
+                } else if (trade.status === 'BE') {
+                    pnlClass = "text-gray-400 text-right font-semibold";
+                    badgeClass = "bg-slate-700/50 text-slate-300 border border-slate-600/20";
+                    statusLabel = "BE";
+                } else if (trade.status === 'OPEN') {
+                    pnlClass = pnlValue >= 0 ? "text-emerald-500/80 text-right italic" : "text-rose-500/80 text-right italic";
+                    badgeClass = "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 animate-pulse";
+                    statusLabel = "OPEN";
+                }
+
+                const formattedDate = formatDateTime(trade.date);
+
+                let imgCell = `<span class="text-gray-600">-</span>`;
+                if (trade.imageUrl) {
+                    imgCell = `
+                        <button onclick="viewHighResImage('${trade.imageUrl}')" class="relative w-8 h-8 rounded border border-darkBorder/80 overflow-hidden cursor-pointer hover:scale-105 transition-transform flex items-center justify-center mx-auto" title="Lihat Setup Chart">
+                            <img src="${trade.imageUrl}" class="w-full h-full object-cover" alt="Setup Thumbnail">
+                        </button>
+                    `;
+                }
+
+                // Mental / Psychology Column Renderer
+                const tradeEmotion = trade.emotion || 'CALM';
+                const tradeDiscipline = trade.discipline || '5';
+                
+                const emotionsIconMap = {
+                    'CALM': '🙂 Tenang',
+                    'FOMO': '⚡ FOMO',
+                    'GREED': '🤑 Tamak',
+                    'FEAR': '😰 Takut',
+                    'REVENGE': '😡 Dendam',
+                    'IMPATIENT': '⏳ Sabar'
+                };
+                
+                let starRating = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= parseInt(tradeDiscipline)) {
+                        starRating += '<i class="fa-solid fa-star text-[8px] text-amber-400"></i>';
+                    } else {
+                        starRating += '<i class="fa-regular fa-star text-[8px] text-gray-600"></i>';
+                    }
+                }
+
+                const mentalCell = `
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="text-[9px] font-semibold text-gray-400">${emotionsIconMap[tradeEmotion] || '🙂 Tenang'}</span>
+                        <div class="flex space-x-0.5 mt-0.5" title="Skor Disiplin: ${tradeDiscipline}/5">
+                            ${starRating}
+                        </div>
+                    </div>
+                `;
+
+                // Display Entry Price alongside TP and SL in table
+                const entryStr = trade.entryPrice ? formatRawNum(trade.entryPrice) : '-';
+                const tpStr = trade.tpPrice ? `<span class="text-emerald-400 font-semibold">${formatRawNum(trade.tpPrice)}</span>` : '<span class="text-gray-600">-</span>';
+                const slStr = trade.slPrice ? `<span class="text-rose-400 font-semibold">${formatRawNum(trade.slPrice)}</span>` : '<span class="text-gray-600">-</span>';
+
+                tr.innerHTML = `
+                    <td class="py-3 px-5 text-gray-400 text-[11px] font-mono whitespace-nowrap">${formattedDate}</td>
+                    <td class="py-3 px-5 font-bold text-gray-100">${trade.asset.toUpperCase()}</td>
+                    <td class="py-3 px-5">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${trade.type === 'LONG' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">
+                            ${trade.type}
+                        </span>
+                    </td>
+                    <td class="py-3 px-5 font-mono text-[11px] text-gray-300">
+                        ${entryStr} <span class="text-gray-600">➔</span> ${tpStr} <span class="text-gray-600">|</span> ${slStr}
+                    </td>
+                    <td class="py-3 px-5 font-mono text-gray-300">${trade.size || '0'}</td>
+                    <td class="py-3 px-5 ${pnlClass}">${pnlValue >= 0 ? '+' : ''}${pnlValue.toFixed(2)}</td>
+                    <td class="py-3 px-5 text-center">${mentalCell}</td>
+                    <td class="py-3 px-5 text-center">${imgCell}</td>
+                    <td class="py-3 px-5 text-center">
+                        <span class="px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase ${badgeClass}">
+                            ${statusLabel}
+                        </span>
+                    </td>
+                    <td class="py-3 px-5 text-center">
+                        <div class="flex items-center justify-center space-x-2">
+                            <button onclick="editTrade('${trade.id}')" title="Edit Trade" class="text-gray-400 hover:text-indigo-400 hover:bg-slate-800 p-1.5 rounded-lg transition-colors cursor-pointer">
+                                <i class="fa-solid fa-pen text-[10px]"></i>
+                            </button>
+                            <button onclick="openDeleteConfirm('${trade.id}')" title="Hapus Trade" class="text-gray-400 hover:text-rose-500 hover:bg-slate-800 p-1.5 rounded-lg transition-colors cursor-pointer">
+                                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Form & Modal operations
+        window.openEquityModal = function() {
+            document.getElementById('initial-equity-input').value = initialEquity;
+            document.getElementById('equity-modal').classList.remove('hidden');
+        };
+
+        window.closeEquityModal = function() {
+            document.getElementById('equity-modal').classList.add('hidden');
+        };
+
+        window.saveInitialEquity = async function(event) {
+            event.preventDefault();
+            if (!userId) return;
+
+            const saveBtn = document.getElementById('save-equity-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Menyimpan...`;
+
+            const val = parseFloat(document.getElementById('initial-equity-input').value) || 0;
+
+            try {
+                const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'balance');
+                await setDoc(settingsDocRef, { initialEquity: val }, { merge: true });
+                showToast("Modal awal berhasil diperbarui!", "success");
+                closeEquityModal();
+            } catch (error) {
+                console.error("Gagal menyimpan modal awal:", error);
+                showToast("Gagal menyimpan ke cloud.", "error");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = "Simpan";
+            }
+        };
+
+        // Daily Mindset Picker helper
+        window.selectMood = function(mood, element) {
+            selectedMoodState = mood;
+            document.getElementById('mental-selected-mood').value = mood;
+            
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.classList.add('grayscale');
+                btn.classList.remove('bg-indigo-500/20', 'border', 'border-indigo-500/30');
+            });
+            element.classList.remove('grayscale');
+            element.classList.add('bg-indigo-500/20', 'border', 'border-indigo-500/30');
+        };
+
+        // Save Daily Mindset Check-in
+        window.saveMentalCheckin = async function(event) {
+            event.preventDefault();
+            if (!userId) {
+                showToast("Kesalahan Otentikasi.", "error");
+                return;
+            }
+
+            const btn = document.getElementById('mental-submit-btn');
+            const selectedMood = document.getElementById('mental-selected-mood').value;
+
+            if (!selectedMood) {
+                showToast("Harap pilih mood/kondisi emosi terlebih dahulu.", "error");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Menyimpan...`;
+
+            const date = document.getElementById('mental-date').value;
+            const sleepHours = parseFloat(document.getElementById('mental-sleep').value) || 0;
+            const focusLevel = parseInt(document.getElementById('mental-stress').value) || 5;
+            const notes = document.getElementById('mental-notes').value.trim();
+
+            const mentalData = {
+                date, mood: selectedMood, sleepHours, focusLevel, notes,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'users', userId, 'mental_logs');
+                await addDoc(colRef, mentalData);
+                showToast("Log mental berhasil disimpan di cloud!", "success");
+                
+                document.getElementById('mental-checkin-form').reset();
+                document.getElementById('mental-selected-mood').value = '';
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.add('grayscale'));
+                document.getElementById('mental-date').value = new Date().toISOString().split('T')[0];
+            } catch (e) {
+                console.error("Gagal menulis log mental:", e);
+                showToast("Gagal menulis log mental ke cloud.", "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Simpan Log Mental";
+            }
+        };
+
+        // Render Mental Log History list
+        function renderMentalLogsHistory() {
+            const container = document.getElementById('mental-logs-history');
+            container.innerHTML = '';
+
+            if (rawMentalLogsList.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-gray-500 text-center italic py-2">Belum ada check-in harian.</p>`;
+                return;
+            }
+
+            const moodsMap = {
+                'ANGRY': '😡 Marah/Dendam',
+                'STRESSED': '😰 Stres/Ragu',
+                'NEUTRAL': '😐 Netral/Biasa',
+                'CALM': '🙂 Tenang/Fokus',
+                'CONFIDENT': '😎 Percaya Diri'
+            };
+
+            rawMentalLogsList.forEach(log => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-800/40 border border-darkBorder/40 rounded-xl p-3 flex justify-between items-start gap-4 text-xs";
+                
+                const logDate = new Date(log.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+                
+                div.innerHTML = `
+                    <div class="space-y-1 flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-gray-200">${logDate}</span>
+                            <span class="px-2 py-0.5 bg-slate-700/60 rounded text-[9px] font-semibold text-gray-300">
+                                Mood: ${moodsMap[log.mood] || '😐 Netral'}
+                            </span>
+                        </div>
+                        <p class="text-gray-400 text-[11px] leading-relaxed italic">"${log.notes || 'Tidak ada catatan harian.'}"</p>
+                        <div class="flex space-x-3 text-[9px] text-gray-500 font-semibold">
+                            <span>Tidur: ${log.sleepHours || '-'} Jam</span>
+                            <span>Fokus: ${log.focusLevel || '3'}/5</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.openTradeModal = function() {
+            document.getElementById('trade-form').reset();
+            document.getElementById('trade-id').value = '';
+            document.getElementById('modal-title').innerHTML = `
+                <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+                <span>Catat Trade Baru</span>
+            `;
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('trade-date').value = now.toISOString().slice(0, 16);
+            
+            document.getElementById('manual-pnl-chk').checked = false;
+            togglePnLField();
+            removeSelectedImage();
+
+            document.getElementById('trade-modal').classList.remove('hidden');
+        };
+
+        window.closeTradeModal = function() {
+            document.getElementById('trade-modal').classList.add('hidden');
+        };
+
+        // Local Image Selection & Preview
+        window.previewImage = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("Ukuran gambar maksimal adalah 5MB.", "error");
+                event.target.value = '';
+                return;
+            }
+
+            selectedImageFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('image-preview').src = e.target.result;
+                document.getElementById('image-upload-placeholder').classList.add('hidden');
+                document.getElementById('image-preview-container').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.removeSelectedImage = function(event) {
+            if (event) event.stopPropagation();
+            selectedImageFile = null;
+            document.getElementById('trade-image').value = '';
+            document.getElementById('image-preview').src = '';
+            document.getElementById('image-upload-placeholder').classList.remove('hidden');
+            document.getElementById('image-preview-container').classList.add('hidden');
+        };
+
+        // High Resolution Image Viewer Modal (Lightbox)
+        window.viewHighResImage = function(url) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        };
+
+        window.closeLightbox = function() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+            document.getElementById('lightbox-img').src = '';
+        };
+
+        // NEW LOGIC: Form P&L calculator using Take Profit (TP) and Stop Loss (SL) targets
+        window.autoCalculatePnL = function() {
+            const isManual = document.getElementById('manual-pnl-chk').checked;
+            if (isManual) return; 
+
+            const type = document.getElementById('trade-type').value; // LONG or SHORT
+            const status = document.getElementById('trade-status').value; // WIN, LOSS, BE, OPEN
+            const entry = parseFloat(document.getElementById('trade-entry').value) || 0;
+            const tp = parseFloat(document.getElementById('trade-tp').value) || 0;
+            const sl = parseFloat(document.getElementById('trade-sl').value) || 0;
+            const size = parseFloat(document.getElementById('trade-size').value) || 0;
+
+            const pnlField = document.getElementById('trade-pnl');
+
+            if (entry === 0 || size === 0) {
+                pnlField.value = "0.00";
+                return;
+            }
+
+            let calcPnL = 0;
+
+            if (status === 'WIN') {
+                if (tp > 0) {
+                    calcPnL = (type === 'LONG') ? (tp - entry) * size : (entry - tp) * size;
+                } else {
+                    calcPnL = 0;
+                }
+            } else if (status === 'LOSS') {
+                if (sl > 0) {
+                    calcPnL = (type === 'LONG') ? (sl - entry) * size : (entry - sl) * size;
+                } else {
+                    calcPnL = 0;
+                }
+            } else if (status === 'BE' || status === 'OPEN') {
+                calcPnL = 0; 
+            }
+
+            pnlField.value = calcPnL.toFixed(2);
+        };
+
+        // Handle P&L input locked states
+        window.togglePnLField = function() {
+            const isManual = document.getElementById('manual-pnl-chk').checked;
+            const pnlField = document.getElementById('trade-pnl');
+            const hintField = document.getElementById('calc-hint');
+
+            if (isManual) {
+                pnlField.removeAttribute('readonly');
+                pnlField.classList.remove('opacity-60');
+                hintField.textContent = "Kalkulator Manual Aktif";
+                hintField.className = "text-[10px] text-amber-400 italic font-semibold";
+            } else {
+                pnlField.setAttribute('readonly', 'true');
+                pnlField.classList.add('opacity-60');
+                hintField.textContent = "Kalkulasi Otomatis Aktif";
+                hintField.className = "text-[10px] text-gray-500 italic";
+                autoCalculatePnL(); 
+            }
+        };
+
+        // Save (Add / Update) trade record to Cloud Database
+        window.saveTrade = async function(event) {
+            event.preventDefault();
+
+            if (!userId) {
+                showToast("Kesalahan Otentikasi. Tidak dapat menyimpan data ke database.", "error");
+                return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Menyimpan...`;
+
+            const tradeId = document.getElementById('trade-id').value;
+            const asset = document.getElementById('trade-asset').value.trim().toUpperCase();
+            const type = document.getElementById('trade-type').value;
+            const entryPrice = parseFloat(document.getElementById('trade-entry').value) || 0;
+            const tpPrice = parseFloat(document.getElementById('trade-tp').value) || 0;
+            const slPrice = parseFloat(document.getElementById('trade-sl').value) || 0;
+            const size = parseFloat(document.getElementById('trade-size').value) || 0;
+            const date = document.getElementById('trade-date').value;
+            const status = document.getElementById('trade-status').value;
+            const pnl = parseFloat(document.getElementById('trade-pnl').value) || 0;
+            const notes = document.getElementById('trade-notes').value.trim();
+            const emotion = document.getElementById('trade-emotion').value;
+            const discipline = document.getElementById('trade-discipline').value;
+
+            const existingTrade = tradeId ? rawTradesList.find(t => t.id === tradeId) : null;
+            let imageUrl = existingTrade ? (existingTrade.imageUrl || '') : '';
+            let imageStoragePath = existingTrade ? (existingTrade.imageStoragePath || '') : '';
+
+            // Handle image upload process if a new image file is chosen
+            if (selectedImageFile) {
+                const progressContainer = document.getElementById('upload-progress-container');
+                const progressBar = document.getElementById('upload-progress-bar');
+                const progressPercent = document.getElementById('upload-percentage');
+
+                progressContainer.classList.remove('hidden');
+
+                const fileExtension = selectedImageFile.name.split('.').pop();
+                const path = `artifacts/${appId}/users/${userId}/trades/${Date.now()}.${fileExtension}`;
+                const storageRef = ref(storage, path);
+
+                if (imageStoragePath) {
+                    const oldImgRef = ref(storage, imageStoragePath);
+                    await deleteObject(oldImgRef).catch(err => console.warn("Gagal menghapus file lama di cloud:", err));
+                }
+
+                const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
+
+                try {
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                progressBar.style.width = progress + '%';
+                                progressPercent.textContent = Math.round(progress) + '%';
+                            }, 
+                            (error) => reject(error), 
+                            async () => {
+                                try {
+                                    const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                                    imageUrl = downloadUrl;
+                                    imageStoragePath = path;
+                                    resolve();
+                                } catch (e) {
+                                    reject(e);
+                                }
+                            }
+                        );
+                    });
+                } catch (error) {
+                    console.error("Gagal mengupload gambar ke Firebase Storage:", error);
+                    showToast("Gagal mengupload gambar chart. Transaksi disimpan tanpa gambar.", "error");
+                } finally {
+                    progressContainer.classList.add('hidden');
+                }
+            }
+
+            const tradeData = {
+                asset, type, entryPrice, tpPrice, slPrice, size, date, status, pnl, notes, imageUrl, imageStoragePath,
+                emotion, discipline,
+                lastUpdated: new Date().toISOString()
+            };
+
+            try {
+                if (tradeId) {
+                    const docRef = doc(db, 'artifacts', appId, 'users', userId, 'trades', tradeId);
+                    await setDoc(docRef, tradeData, { merge: true });
+                    showToast(`Trade ${asset} berhasil diperbarui!`, "success");
+                } else {
+                    const colRef = collection(db, 'artifacts', appId, 'users', userId, 'trades');
+                    await addDoc(colRef, tradeData);
+                    showToast(`Trade ${asset} berhasil dicatat!`, "success");
+                }
+
+                closeTradeModal();
+            } catch (error) {
+                console.error("Gagal melakukan penulisan Firestore database:", error);
+                showToast("Firestore Gagal Menyimpan. Periksa akses jaringan Anda.", "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Simpan Trade";
+            }
+        };
+
+        // Edit Action - Pull data from local array and populate form
+        window.editTrade = function(id) {
+            const target = rawTradesList.find(t => t.id === id);
+            if (!target) return;
+
+            document.getElementById('trade-id').value = target.id;
+            document.getElementById('trade-asset').value = target.asset;
+            document.getElementById('trade-type').value = target.type;
+            document.getElementById('trade-entry').value = target.entryPrice || '';
+            document.getElementById('trade-tp').value = target.tpPrice || '';
+            document.getElementById('trade-sl').value = target.slPrice || '';
+            document.getElementById('trade-size').value = target.size || '';
+            document.getElementById('trade-date').value = target.date;
+            document.getElementById('trade-status').value = target.status;
+            document.getElementById('trade-pnl').value = target.pnl || '';
+            document.getElementById('trade-notes').value = target.notes || '';
+            
+            document.getElementById('trade-emotion').value = target.emotion || 'CALM';
+            document.getElementById('trade-discipline').value = target.discipline || '5';
+
+            if (target.imageUrl) {
+                document.getElementById('image-preview').src = target.imageUrl;
+                document.getElementById('image-upload-placeholder').classList.add('hidden');
+                document.getElementById('image-preview-container').classList.remove('hidden');
+            } else {
+                removeSelectedImage();
+            }
+
+            document.getElementById('manual-pnl-chk').checked = true;
+            togglePnLField();
+
+            document.getElementById('modal-title').innerHTML = `
+                <i class="fa-solid fa-pen-to-square text-indigo-400"></i>
+                <span>Edit Rincian Transaksi</span>
+            `;
+
+            document.getElementById('trade-modal').classList.remove('hidden');
+        };
+
+        // Delete confirmation custom flow
+        window.openDeleteConfirm = function(id) {
+            activeDeleteId = id;
+            document.getElementById('delete-modal').classList.remove('hidden');
+        };
+
+        window.closeDeleteModal = function() {
+            activeDeleteId = null;
+            document.getElementById('delete-modal').classList.add('hidden');
+        };
+
+        document.getElementById('confirm-delete-btn').onclick = async function() {
+            if (!activeDeleteId || !userId) return;
+
+            try {
+                const target = rawTradesList.find(t => t.id === activeDeleteId);
+                
+                if (target && target.imageStoragePath) {
+                    const imgRef = ref(storage, target.imageStoragePath);
+                    await deleteObject(imgRef).catch(err => {
+                        console.warn("Berkas gambar di Cloud Storage tidak ditemukan atau gagal dibersihkan.", err);
+                    });
+                }
+
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'trades', activeDeleteId);
+                await deleteDoc(docRef);
+                showToast("Log trade dan lampiran gambar berhasil dibersihkan dari cloud.", "success");
+            } catch (e) {
+                console.error("Error deleting firestore record:", e);
+                showToast("Gagal menghapus log transaksi.", "error");
+            } finally {
+                closeDeleteModal();
+            }
+        };
+
+        // Helper: Format Currency values (USD default)
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(num);
+        }
+
+        function formatRawNum(num) {
+            if (!num) return '0.00';
+            return parseFloat(num).toLocaleString('en-US', { maximumFractionDigits: 6 });
+        }
+
+        // Helper: Datetime formatter to local neat Indonesian format
+        function formatDateTime(dateStr) {
+            if (!dateStr) return "-";
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }) + ' ' + date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Custom non-blocking Toast UI Alert System
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-slate-800 border-slate-700";
+            let iconClass = "fa-solid fa-info text-sky-400";
+            
+            if (type === "success") {
+                bgClass = "bg-emerald-950/90 border-emerald-500/20";
+                iconClass = "fa-solid fa-circle-check text-emerald-400";
+            } else if (type === "error") {
+                bgClass = "bg-rose-950/90 border-rose-500/20";
+                iconClass = "fa-solid fa-circle-exclamation text-rose-400";
+            }
+
+            toast.className = `${bgClass} border flex items-center space-x-3 px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-5 opacity-0 text-xs font-semibold text-gray-200`;
+            toast.innerHTML = `
+                <i class="${iconClass} text-sm"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-5', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+    </script>
+</body>
 </html>
