@@ -416,14 +416,88 @@
                         </div>
                     </div>
 
+                    <!-- CBT Reframing Tool & AI Coach -->
+                    <div class="space-y-6 lg:col-span-2">
+                        <!-- CBT Reframing Tool -->
+                        <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder shadow-xl">
+                            <h3 class="text-sm font-bold text-gray-200 mb-2 flex items-center space-x-2">
+                                <i class="fa-solid fa-masks-theater text-indigo-400"></i>
+                                <span>CBT Reframing Tool (Terapi Pola Pikir)</span>
+                            </h3>
+                            <p class="text-xs text-gray-400 mb-4">Pilih jebakan emosi yang sedang Anda rasakan saat ini untuk meluruskan kembali bias kognitif Anda.</p>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <select id="cbt-selector" onchange="applyCbtReframing()" class="w-full px-3 py-2 bg-slate-800 border border-darkBorder rounded-xl text-xs text-gray-100 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                                        <option value="">-- Pilih Jebakan Emosi Trading --</option>
+                                        <option value="FEAR">Takut Mengambil Posisi (Ragu Entry)</option>
+                                        <option value="LOSS">Stres Berat Setelah Loss Beruntun (Consecutive Losses)</option>
+                                        <option value="REVENGE">Hasrat Ingin Revenge Trading (Balas Dendam)</option>
+                                        <option value="FOMO">Takut Ketinggalan Trend / FOMO</option>
+                                        <option value="IMPATIENT">Tidak Sabaran Menunggu Setup Sesuai Plan</option>
+                                    </select>
+                                </div>
+
+                                <!-- CBT Cards Output -->
+                                <div id="cbt-output-area" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                                    <!-- Cognitive Distortion Card -->
+                                    <div class="bg-rose-950/20 border border-rose-500/20 p-4 rounded-xl">
+                                        <h4 class="text-xs font-bold text-rose-400 mb-1 flex items-center space-x-2">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <span>Distorsi Kognitif (Pola Pikir Salah)</span>
+                                        </h4>
+                                        <p id="cbt-distortion-text" class="text-xs text-gray-300 leading-relaxed"></p>
+                                    </div>
+                                    <!-- Healthy Reframe Card -->
+                                    <div class="bg-emerald-950/20 border border-emerald-500/20 p-4 rounded-xl">
+                                        <h4 class="text-xs font-bold text-emerald-400 mb-1 flex items-center space-x-2">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            <span>Reframing Profesional (Pola Pikir Sehat)</span>
+                                        </h4>
+                                        <p id="cbt-reframe-text" class="text-xs text-gray-300 leading-relaxed"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Trading Psychology Coach -->
+                        <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder shadow-xl flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-sm font-bold text-gray-200 flex items-center space-x-2">
+                                        <i class="fa-solid fa-brain text-emerald-400"></i>
+                                        <span>Gemini AI Trading Psychology Coach</span>
+                                    </h3>
+                                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[9px] font-bold">Ditenagai Gemini</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mb-4">Dapatkan audit mental profesional secara real-time. AI Coach akan menganalisis histori emosi trade dan jurnal psikologi harian Anda dari database cloud.</p>
+                                
+                                <div id="ai-coach-response" class="bg-slate-900/60 rounded-xl p-4 border border-darkBorder/80 max-h-[250px] overflow-y-auto mb-4">
+                                    <div class="text-center py-6 text-gray-500 text-xs italic">
+                                        <i class="fa-solid fa-robot text-2xl mb-2 text-gray-600 block"></i>
+                                        Belum ada analisis. Tekan tombol di bawah untuk memulai sesi audit psikologi.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button id="ai-coach-btn" onclick="analyzeWithAICoach()" class="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold text-xs rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-brain"></i>
+                                <span>Minta Analisis AI Coach</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Psychology Analytics & Guide Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Psychology Analytics -->
-                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder lg:col-span-2 shadow-xl flex flex-col justify-between">
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder shadow-xl flex flex-col justify-between">
                         <div>
                             <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center space-x-2">
                                 <i class="fa-solid fa-chart-line text-indigo-400"></i>
                                 <span>Korelasi Mental vs Kinerja Trading</span>
                             </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="space-y-4">
                                 <!-- Emotional Win Rate Breakdown -->
                                 <div class="bg-slate-800/40 border border-darkBorder/60 p-4 rounded-xl">
                                     <h4 class="text-xs font-semibold text-gray-300 mb-2 flex items-center justify-between">
@@ -449,10 +523,59 @@
                         </div>
 
                         <!-- Daily Mood Log History -->
-                        <div class="border-t border-darkBorder/60 pt-4">
+                        <div class="border-t border-darkBorder/60 pt-4 mt-4">
                             <h4 class="text-xs font-bold text-gray-300 mb-3">Riwayat Log Psikologi</h4>
                             <div class="overflow-y-auto max-h-[150px] space-y-2" id="mental-logs-history">
                                 <p class="text-[11px] text-gray-500 text-center italic py-2">Belum ada check-in harian.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Psychology Guide -->
+                    <div class="bg-darkCard p-5 rounded-2xl border border-darkBorder lg:col-span-2 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center space-x-2">
+                                <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+                                <span>Edukasi & Strategi Mengendalikan Mental</span>
+                            </h3>
+                            <p class="text-xs text-gray-400 mb-4">Klik panduan interaktif di bawah ini untuk mempelajari bahaya psikologis terbesar bagi trader dan cara menanggulanginya.</p>
+                            
+                            <div class="space-y-3">
+                                <!-- Guide 1: FOMO -->
+                                <div class="border border-darkBorder bg-slate-800/20 rounded-xl overflow-hidden">
+                                    <button onclick="toggleAccordion('guide-fomo')" class="w-full p-4 flex justify-between items-center text-left text-xs font-bold text-gray-200 hover:bg-slate-800/40 transition-colors">
+                                        <span>⚡ FOMO (Fear Of Missing Out): Musuh Terbesar Trader</span>
+                                        <i id="icon-guide-fomo" class="fa-solid fa-chevron-down text-gray-500"></i>
+                                    </button>
+                                    <div id="content-guide-fomo" class="p-4 border-t border-darkBorder text-xs text-gray-300 leading-relaxed hidden space-y-2">
+                                        <p><strong>Penyebab:</strong> FOMO terjadi karena keserakahan (greed) dan ketakutan melihat orang lain mencetak profit di luar keputusan kita. Otak menolak menerima kenyataan kehilangan peluang.</p>
+                                        <p><strong>Cara Menghancurkannya:</strong> Ingat bahwa pasar selalu buka 24 jam sehari, 5 hari seminggu. Kehilangan satu setup tidak akan merusak akun Anda, tetapi memaksakan entry tanpa konfirmasi dipastikan akan merusak akun Anda. Terapkan prinsip: <i>"Lebih baik kehilangan setup daripada kehilangan modal."</i></p>
+                                    </div>
+                                </div>
+
+                                <!-- Guide 2: Revenge Trading -->
+                                <div class="border border-darkBorder bg-slate-800/20 rounded-xl overflow-hidden">
+                                    <button onclick="toggleAccordion('guide-revenge')" class="w-full p-4 flex justify-between items-center text-left text-xs font-bold text-gray-200 hover:bg-slate-800/40 transition-colors">
+                                        <span>😡 Revenge Trading: Mengapa Otak Menuntut Balas Dendam</span>
+                                        <i id="icon-guide-revenge" class="fa-solid fa-chevron-down text-gray-500"></i>
+                                    </button>
+                                    <div id="content-guide-revenge" class="p-4 border-t border-darkBorder text-xs text-gray-300 leading-relaxed hidden space-y-2">
+                                        <p><strong>Penyebab:</strong> Ketika mengalami kerugian besar, harga diri kita terluka. Otak memicu hormon stres berlebih dan mengaktifkan mode bertahan hidup (fight or flight) yang mendesak Anda masuk kembali ke pasar dengan lot lebih besar untuk mengembalikan kerugian instan.</p>
+                                        <p><strong>Cara Menghancurkannya:</strong> Tetapkan batas kerugian harian (Daily Max Loss). Begitu menyentuh batas tersebut, paksa diri Anda untuk menutup laptop, matikan aplikasi charting, dan lakukan aktivitas fisik di luar ruangan selama minimal 2 jam agar emosi Anda kembali netral.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Guide 3: Prospect Theory -->
+                                <div class="border border-darkBorder bg-slate-800/20 rounded-xl overflow-hidden">
+                                    <button onclick="toggleAccordion('guide-prospect')" class="w-full p-4 flex justify-between items-center text-left text-xs font-bold text-gray-200 hover:bg-slate-800/40 transition-colors">
+                                        <span>📈 Prospect Theory: Mengapa Kita Menahan Loss Terlalu Lama</span>
+                                        <i id="icon-guide-prospect" class="fa-solid fa-chevron-down text-gray-500"></i>
+                                    </button>
+                                    <div id="content-guide-prospect" class="p-4 border-t border-darkBorder text-xs text-gray-300 leading-relaxed hidden space-y-2">
+                                        <p><strong>Penyebab:</strong> Berdasarkan ilmu ekonomi perilaku, emosi sakit akibat kehilangan $100 itu dua kali lipat lebih menyakitkan daripada kebahagiaan saat mendapatkan $100. Akibatnya, trader cenderung menolak mengakui kesalahan dan menahan posisi merugi (Loss) dengan harapan harga berbalik arah, sementara memotong posisi untung (Profit) terlalu dini karena takut profit menguap.</p>
+                                        <p><strong>Cara Menghancurkannya:</strong> Selalu gunakan Stop Loss yang ketat dan tidak dapat diubah-ubah setelah posisi aktif. Letakkan TP minimal dua kali lipat dari ukuran SL (Risk to Reward Ratio minimal 1:2) agar secara matematika Anda tetap profit meskipun win rate Anda hanya 40%.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -781,7 +904,7 @@
         let activeMainTab = 'dashboard'; 
         let selectedMoodState = '';
 
-        // Firebase Configuration (Proyek Anda)
+        // Firebase Configuration
         let firebaseConfig = {
             apiKey: "AIzaSyDPi9vsm_8cihzcC3HV0XflfZ8zbzE-Xfk",
             authDomain: "jurnaling-trade-49aaa.firebaseapp.com",
@@ -1905,6 +2028,159 @@
                 showToast("Gagal menghapus log transaksi.", "error");
             } finally {
                 closeDeleteModal();
+            }
+        };
+
+        // CBT Reframing Data Processor
+        window.applyCbtReframing = function() {
+            const selectValue = document.getElementById('cbt-selector').value;
+            const outputArea = document.getElementById('cbt-output-area');
+            const distortionText = document.getElementById('cbt-distortion-text');
+            const reframeText = document.getElementById('cbt-reframe-text');
+
+            if (!selectValue) {
+                outputArea.classList.add('hidden');
+                return;
+            }
+
+            const cbtDatabase = {
+                'FEAR': {
+                    distortion: "Aku takut banget entry trade ini, gimana kalau nanti SL dan uangku hilang? Ini membuktikan aku trader gagal dan analisisku selalu salah.",
+                    reframe: "SL adalah biaya bisnis trading yang wajar. Jika setup ini memenuhi kaidah plan, tugasku hanyalah mengeksekusi dengan disiplin. Satu kali kekalahan tidak mendefinisikan kemampuanku, melainkan bagian dari distribusi probabilitas."
+                },
+                'LOSS': {
+                    distortion: "Aku sudah loss 3 kali berturut-turut hari ini. Pasar sengaja memanipulasi posisiku. Aku harus segera mengembalikan modal (recover) di trade berikutnya dengan lot besar!",
+                    reframe: "Loss beruntun adalah hal biasa bahkan untuk sistem profesional sekalipun. Memaksa balas dendam dengan menaikkan lot akan menghancurkan emosi & modal. Lebih baik aku rehat sejenak hari ini agar logika berpikirku kembali jernih."
+                },
+                'REVENGE': {
+                    distortion: "Harga langsung berbalik arah setelah mengenai SL-ku, sialan! Aku akan langsung entry kebalikannya sekarang dengan lot maksimal biar impas!",
+                    reframe: "Ini adalah perilaku judi emosional. Pasar tidak memiliki niat pribadi denganku. Masuk tanpa konfirmasi valid hanya karena emosi terluka adalah tiket cepat menuju margin call."
+                },
+                'FOMO': {
+                    distortion: "Wah gila, Gold naik kencang sekali tanpa aku! Aku harus langsung buy sekarang juga meskipun harganya sudah terlalu mahal, kalau tidak aku akan ketinggalan profit masif!",
+                    reframe: "Mengejar harga di pucuk adalah salah satu kesalahan fatal. Selalu ada peluang baru besok hari. Lebih baik aku menunggu harga melakukan koreksi (retracement) sehat daripada memaksakan masuk di zona berisiko tinggi."
+                },
+                'IMPATIENT': {
+                    distortion: "Sudah 3 jam tidak ada setup yang muncul, aku bosan sekali. Aku entry buy di pair acak ini saja, kayaknya harganya mau naik sedikit.",
+                    reframe: "Trading bukan tentang mencari kesibukan, melainkan menunggu peluang berkualitas tinggi. Menahan diri untuk tidak entry saat tidak ada setup adalah bentuk kedisiplinan tingkat tinggi yang membedakan amatir dengan profesional."
+                }
+            };
+
+            const selected = cbtDatabase[selectValue];
+            if (selected) {
+                distortionText.innerText = selected.distortion;
+                reframeText.innerText = selected.reframe;
+                outputArea.classList.remove('hidden');
+            }
+        };
+
+        // Gemini AI Coach Integration
+        window.analyzeWithAICoach = async function() {
+            const aiResponseArea = document.getElementById('ai-coach-response');
+            const aiBtn = document.getElementById('ai-coach-btn');
+            if (!userId) return;
+
+            aiBtn.disabled = true;
+            aiBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i>Menganalisis...`;
+            aiResponseArea.innerHTML = `<div class="p-4 text-center text-gray-400 italic">Menghubungkan ke Gemini AI Coach untuk menganalisis data Anda...</div>`;
+
+            // Prepare dynamic prompt data
+            const tradeSummary = rawTradesList.map(t => ({
+                asset: t.asset,
+                type: t.type,
+                status: t.status,
+                pnl: t.pnl,
+                emotionBefore: t.emotionBefore,
+                emotionDuring: t.emotionDuring,
+                emotionAfter: t.emotionAfter,
+                discipline: t.discipline
+            }));
+
+            const mentalLogsSummary = rawMentalLogsList.map(l => ({
+                mood: l.mood,
+                sleep: l.sleepHours,
+                focus: l.focusLevel,
+                notes: l.notes
+            }));
+
+            const userQuery = `
+            Analisis data psikologi trading saya. Berikut datanya:
+            Log Transaksi: ${JSON.stringify(tradeSummary)}
+            Log Harian Mental: ${JSON.stringify(mentalLogsSummary)}
+
+            Berikan audit kognitif mendalam secara ramah dan profesional sebagai Psikolog Trading Ahli.
+            Format respons Anda dengan markdown HTML bersih (gunakan tag <p>, <ul>, <li>, <strong>, dll. Jangan gunakan tag markdown asli seperti **, #, dll. tetapi gunakan HTML murni agar bisa langsung dirender).
+            Fokus pada:
+            1. Identifikasi distorsi kognitif utama (misalnya jika sering FOMO, Revenge Trading, dll).
+            2. Korelasi antara mood harian/tidur dengan kinerja trading.
+            3. Langkah aksi konkret (CBT) yang bisa saya lakukan besok.
+            `;
+
+            const systemPrompt = "Anda adalah Coach Psikologi Trading (Trading Psychology Coach) kelas dunia. Berikan analisis psikologis yang tajam, penuh empati, ilmiah, dan berorientasi pada solusi taktis berdasarkan data log trader.";
+
+            const apiKey = ""; // Canvas automatically supplies this key in runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            // Fetch with exponential backoff
+            let retries = 3;
+            let delay = 1000;
+            let success = false;
+            let result = null;
+
+            while (retries > 0 && !success) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error("API call failed");
+                    result = await response.json();
+                    success = true;
+                } catch (err) {
+                    retries--;
+                    if (retries === 0) {
+                        aiResponseArea.innerHTML = `<div class="p-4 text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs">Gagal menghubungi AI Coach. Silakan coba beberapa saat lagi.</div>`;
+                        aiBtn.disabled = false;
+                        aiBtn.innerHTML = `<i class="fa-solid fa-brain mr-2"></i>Minta Analisis AI Coach`;
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+
+            const candidate = result.candidates?.[0];
+            if (candidate && candidate.content?.parts?.[0]?.text) {
+                const text = candidate.content.parts[0].text;
+                // Render HTML directly inside response area
+                aiResponseArea.innerHTML = `<div class="prose prose-invert text-xs text-gray-300 space-y-3 leading-relaxed">${text}</div>`;
+            } else {
+                aiResponseArea.innerHTML = `<div class="p-4 text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs">Response format error dari AI Coach.</div>`;
+            }
+
+            aiBtn.disabled = false;
+            aiBtn.innerHTML = `<i class="fa-solid fa-brain mr-2"></i>Minta Analisis AI Coach`;
+        };
+
+        // Interactive accordion toggler
+        window.toggleAccordion = function(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.className = "fa-solid fa-chevron-up text-indigo-400";
+            } else {
+                content.classList.add('hidden');
+                icon.className = "fa-solid fa-chevron-down text-gray-500";
             }
         };
 
